@@ -1,5 +1,4 @@
 -- TODO properly document all code
-
 module Lib
     ( someFunc
     ) where
@@ -9,113 +8,148 @@ import Data.Matrix
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"
 
-
 -- | Constants
 width = 20
 height = 20
 playerColor = "blue"
 cpuColor = "orange"
-bikeSpeed = 1
 pMark = 1
 cpuMark = -1
 
+-- | @Direction@ represents the possible course a player can move
 data Direction
-  = UP
-  | DOWN
-  | LEFT
-  | RIGHT
+  = North
+  | South
+  | East
+  | West
   deriving (Show, Eq)
 
+-- | @Move@ represents the possible moves a user can take
+data Move
+  = MoveLeft
+  | MoveRight
+  | MoveForward
+
+-- | @Position@ is a type synonym for the tuple (Int,Int)
+-- The first element is the row (y coordinate), second element is the column (x coordinate)
 type Position = (Int, Int)
 
+-- | @Player@ represents a player moving in a specified direction who is at the current position
 data Player = Player Direction Position
     deriving (Eq, Show)
 
-data Move 
-  = MoveLeft
-  | MoveRight
-  | MoveStraight
-
--- | Tron State
--- Matrix Int
--- Player (Direction Position)
--- TODO later CPUPlayer (Direction Position)
+-- | @TronState@ is the heart of the game Tron
+-- Single data constructor that takes in two Values
+-- i) a Matrix of Int's representing the current grid/state of the game
+-- ii) the current player with their direction and current position
 data TronState = TronState (Matrix Int) Player
    deriving (Eq, Show)
 
+-- | @initTronState@ initializes a matrix of size @height@ and @width@
+-- Creates a single player at the center of the matrix with an initial direction
 initTronState :: TronState
-initTronState = TronState matrix (Player RIGHT playerPos)
+initTronState = TronState matrix (Player West playerPos)
     where
-        playerPos = (width `div` 2, height `div` 2)
+        playerPos = (height `div` 2, width `div` 2) -- remember Position is (row, col) AKA (y, x)
         matrix = setElem pMark playerPos (zero height width)
 
--- TODO write tests
--- TODO change left up down right to lower case
+-- | @changeDirection direction move@ evaluates to the next direction state depending on what @move@ is
+-- For example, if we are travelling @North@ and we @MoveLeft@, then the next direction would be @East@
 changeDirection :: Direction -> Move -> Direction
-changeDirection UP MoveLeft = LEFT
-changeDirection DOWN MoveLeft = RIGHT
-changeDirection LEFT MoveLeft = DOWN
-changeDirection RIGHT MoveLeft = UP
-changeDirection UP MoveRight = RIGHT
-changeDirection DOWN MoveRight = LEFT
-changeDirection LEFT MoveRight = UP
-changeDirection RIGHT MoveRight = DOWN
-changeDirection d MoveStraight = d
+changeDirection North MoveLeft = West
+changeDirection South MoveLeft = East
+changeDirection East MoveLeft = North
+changeDirection West MoveLeft = South
+changeDirection North MoveRight = East
+changeDirection South MoveRight = West
+changeDirection East MoveRight = South
+changeDirection West MoveRight = North
+changeDirection d MoveForward = d
 
-movePlayer :: Player -> Player
-movePlayer (Player UP (x,y)) = Player UP (x, y-bikeSpeed)
-movePlayer (Player DOWN (x,y)) = Player DOWN (x, y+bikeSpeed)
-movePlayer (Player RIGHT (x,y)) = Player RIGHT (x-bikeSpeed, y)
-movePlayer (Player LEFT (x,y)) = Player LEFT (x+bikeSpeed, y)
+-- TODO write tests
+-- | @calculateNextPosition direction position@ calculates the next position based on the specified direction
+-- ASSUME that (1,1) corresponds to the top left position of the matrix
+calculateNextPosition :: Direction -> Position -> Position
+calculateNextPosition North (row,col) = (row-1, col)
+calculateNextPosition South (row,col) = (row+1, col)
+calculateNextPosition East  (row,col) = (row, col+1)
+calculateNextPosition West  (row,col) = (row, col-1)
 
 -- | TODO check whether the player is off the grid
 -- TODO tests
 -- DUY
 isOutOfBounds :: TronState -> Bool
-isOutOfBounds = undefined
+isOutOfBounds ts = False
 
 -- | TODO check if hit jet trail
   -- TODO tests
 -- ERIC
 isCollideWithJetTrail :: TronState -> Bool
-isCollideWithJetTrail = undefined
+isCollideWithJetTrail ts = False
 
--- TODO turnLeft, turnRight, moveFoward need to mark using bikeSpeed (e.g. if bikeSpeed = 3 we need to mark 3 spots on the grid)
--- turnLeft will change direction and then call moveForward with the updated direction
+-- TODO tests
+updatePlayerDirection :: Player -> Move -> Player
+updatePlayerDirection (Player d pos) move = Player (changeDirection d move) pos
+
+-- TODO moveLeft, moveRight, moveFoward (just ASSUME bikeSpeed is 1, if too slow we can increase the tick rate of the game)
+-- moveLeft will change direction and then call moveForward with the updated direction
 -- TODO tests
 -- DUY
-turnLeft :: TronState -> TronState
-turnLeft = undefined
+moveLeft :: TronState -> TronState
+moveLeft = undefined
 
--- ERIC
 -- TODO tests
-turnRight :: TronState -> TronState
-turnRight = undefined
+-- @moveRight tronState@ moves the player right and forward
+moveRight :: TronState -> TronState
+moveRight (TronState m p) = moveForward (TronState m (updatePlayerDirection p MoveRight))
 
--- DUY or ERIC 
 -- TODO tests
+-- @moveForward tronState@ moves the current player forward in their direction and updates the matrix
 moveForward :: TronState -> TronState
-moveForward = undefined
+moveForward (TronState matrix (Player d pos)) = TronState newMatrix (Player d newPos)
+  where
+      newPos = calculateNextPosition d pos
+      newMatrix = setElem pMark newPos matrix
+
 
 -- TODO might need isTronWin, isTronLoss, isTronTied functions that nextGameState can call
 
--- will handle all collision logic, add some indicator to translate that the game is over, otherwise move in the specified direction
--- if it's simple, put collision logic in here, otherwise put into isGameWon function and call it
--- ASSUME tronstate is valid (that is each player is not collided with anything)
--- AFTER transitioning to next game state, we need to check collisions
--- BOTH
--- add boolean to tronstate if game is over
+-- | @nextGameState tronState move@ produces the next state of the game based on the current move of the player
+-- ASSUME @tronstate@ is valid (that is there are no collisions)
+-- After we get the "potential" next game state, we need to check for any collisions
 -- TODO tests
-nextGameState :: TronState -> Direction -> TronState
-nextGameState = undefined
+-- TODO consider putting game status into the TronState rather than producing Maybe TronState
+nextGameState :: TronState -> Move -> Maybe TronState
+nextGameState ts move = if isValidGameState then Just nextTs else Nothing
+  where nextTs = case move of
+                        MoveLeft -> moveLeft ts
+                        MoveRight -> moveRight ts
+                        MoveForward -> moveForward ts
+        isValidGameState = not (isOutOfBounds nextTs) && not (isCollideWithJetTrail nextTs)
 
--- print out the state of the game
--- will print out the maze (could create a new one with characters rather than 0/-1/1) or game over
--- TODO how do we remember the state when calling nextGameState
--- might need to do with loops and IO
--- ERIC
-printNextGameState :: TronState -> Direction -> String
-printNextGameState = undefined
+-- | @printNextGameState tronState@
+-- Our proof of concept demo will use this function which repeatedly asks you each time whether to move right, left, or forward
+-- Will print the next valid game state, otherwise if you've crashed then the game is over
+printNextGameState :: TronState -> IO()
+printNextGameState ts =
+  putStrLn "What's your next move? Choose from [Right, Left, Forward]"
+  >> getLine
+  >>= readMove
+  >>= (return . nextGameState ts)
+  >>= handleNextTronState
+
+readMove :: String -> IO Move
+readMove "Right" = return MoveRight
+readMove "Left" = return MoveLeft
+readMove "Forward" = return MoveForward
+readMove _ = undefined
+
+handleNextTronState :: Maybe TronState -> IO()
+handleNextTronState Nothing = putStrLn "Game over!"
+handleNextTronState (Just ts@(TronState matrix (Player dir pos))) =
+  putStrLn (prettyMatrix matrix)
+  >> putStrLn ("You moved " ++ show dir ++ " and are now at position " ++ show pos)
+  >> printNextGameState ts
 
 -- if we have time, do a crappy AI
 -- add (cpu) Player to TronState
