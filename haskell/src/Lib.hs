@@ -130,6 +130,7 @@ nextGameState ts move = if isValidGameState then Just nextTs else Nothing
 -- | @printNextGameState tronState@
 -- Our proof of concept demo will use this function which repeatedly asks you each time whether to move right, left, or forward
 -- Will print the next valid game state, otherwise if you've crashed then the game is over
+-- TODO put this with main and see if it works when executable produced
 printNextGameState :: TronState -> IO()
 printNextGameState ts =
   putStrLn "What's your next move? Choose from [Right, Left, Forward]"
