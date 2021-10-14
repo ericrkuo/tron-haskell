@@ -138,6 +138,8 @@ printNextGameState ts =
   >>= (return . nextGameState ts)
   >>= handleNextTronState
 
+-- TODO see if some way to listen to keyboard events instead
+-- if using AWSD or arrow keys, need to be aware of current direction going combined with which key pressed
 readMove :: String -> IO Move
 readMove "Right" = return MoveRight
 readMove "Left" = return MoveLeft
