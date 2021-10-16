@@ -7,7 +7,7 @@ main :: IO ()
 main = defaultMain tests
 
 tests :: TestTree
-tests = testGroup "Tests" [initStateTests, changeDirectionTests, calculateNextPositionTests]
+tests = testGroup "Tests" [initStateTests, changeDirectionTests, calculateNextPositionTests, jetTrailCollisionTests]
 
 -- main = defaultMain $ testGroup "Tests" $
 --   [ testCase "Addition works" $ do
@@ -79,3 +79,96 @@ calculateNextPositionTests = testGroup "calculateNextPosition unit tests"
     , testCase "calculateNextPosition West" $
       calculateNextPosition West (10, 10) @?= (10, 9)
   ]
+
+jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
+  [
+    testCase "no collision moving forward on initial state" $
+      willCollideWithJetTrail initTronState MoveForward @?= False
+
+    , testCase "no collision moving right on initial state" $
+      willCollideWithJetTrail initTronState MoveLeft @?= False
+
+    , testCase "no collision moving left on initial state" $
+      willCollideWithJetTrail initTronState MoveRight @?= False
+
+    -- starting at (2,2) South, MoveForward should not collide
+    -- ┌       ┐
+    -- │ 1 1 1 │
+    -- │ 1 0 1 │
+    -- │ 1 0 1 │
+    -- │ 1 1 1 │
+    -- └       ┘
+    , testCase "no collision moving forward surrounded by jetrails" $
+      willCollideWithJetTrail
+        (mockTronState (fromLists [[1,1,1], [1,0,1], [1,0,1], [1,1,1]]) South (2,2))
+        MoveForward @?= False
+
+    -- starting at (2,2) North, MoveRight should not collide
+    -- ┌       ┐
+    -- │ 1 1 1 │
+    -- │ 1 0 0 │
+    -- │ 1 1 1 │
+    -- └       ┘
+    , testCase "no collision moving right surrounded by jetrails" $
+      willCollideWithJetTrail
+        (mockTronState (fromLists [[1,1,1], [1,0,0], [1,1,1]]) North (2,2))
+        MoveRight @?= False
+
+    -- starting at (2,2) North, MoveLeft should not collide
+    -- ┌       ┐
+    -- │ 1 1 1 │
+    -- │ 0 0 1 │
+    -- │ 1 1 1 │
+    -- └       ┘
+    , testCase "no collision moving left surrounded by jetrails" $
+      willCollideWithJetTrail
+        (mockTronState (fromLists [[1,1,1], [0,0,1], [1,1,1]]) North (2,2))
+        MoveLeft @?= False
+    
+    -- starting at (2,2) North, MoveRight should not collide
+    -- ┌       ┐
+    -- │ 1 1 1 │
+    -- │ 1 0 0 │
+    -- │ 1 1 1 │
+    -- └       ┘
+    , testCase "no collision moving right surrounded by jetrails" $
+      willCollideWithJetTrail
+        (mockTronState (fromLists [[1,1,1], [1,0,0], [1,1,1]]) North (2,2))
+        MoveRight @?= False
+
+    -- starting at (2,2) North, MoveForward should collide
+    -- ┌       ┐
+    -- │ 0 1 0 │
+    -- │ 0 0 0 │
+    -- │ 0 0 0 │
+    -- └       ┘
+    , testCase "collision moving forward" $
+      willCollideWithJetTrail
+        (mockTronState (fromLists [[0,1,0], [0,0,0], [0,0,0]]) North (2,2))
+        MoveForward @?= True
+
+    -- starting at (2,2) North, MoveRight should collide
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ 0 0 1 │
+    -- │ 0 0 0 │
+    -- └       ┘
+    , testCase "collision moving right" $
+      willCollideWithJetTrail
+        (mockTronState (fromLists [[0,0,0], [0,0,1], [0,0,0]]) North (2,2))
+        MoveRight @?= True
+
+    -- starting at (2,2) North, MoveLeft should collide
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ 1 0 0 │
+    -- │ 0 0 0 │
+    -- └       ┘
+    , testCase "collision moving left" $
+      willCollideWithJetTrail
+        (mockTronState (fromLists [[0,0,0], [1,0,0], [0,0,0]]) North (2,2))
+        MoveLeft @?= True
+  ]
+
+mockTronState :: Matrix Int -> Direction -> Position -> TronState
+mockTronState matrix direction pos = TronState matrix (Player direction pos)

@@ -3,7 +3,7 @@ module Lib where
 
 import Data.Matrix
 
--- | Constants
+-- Constants
 width = 20
 height = 20
 playerColor = "blue"
@@ -75,12 +75,11 @@ calculateNextPosition West  (row,col) = (row, col-1)
 isOutOfBounds :: TronState -> Bool
 isOutOfBounds ts = False
 
--- | @isCollideWithJetTrail tronState move@ checks for any future collisions
+-- | @willCollideWithJetTrail tronState move@ checks for any future collisions
 -- produces True if the player's current position and move will collide with any jet trail, False otherwise
 -- ASSUME the player's new position after moving is not out of bounds
--- TODO tests
-isCollideWithJetTrail :: TronState -> Move -> Bool
-isCollideWithJetTrail (TronState m (Player d p)) move = getElem newRow newCol m /= 0
+willCollideWithJetTrail :: TronState -> Move -> Bool
+willCollideWithJetTrail (TronState m (Player d p)) move = getElem newRow newCol m /= 0
   where newDirection = changeDirection d move
         (newRow, newCol) = calculateNextPosition newDirection p
 
@@ -123,7 +122,7 @@ nextGameState ts move = if isValidGameState then Just nextTs else Nothing
                         MoveRight -> moveRight ts
                         MoveForward -> moveForward ts
         -- IMPORTANT: check out of bounds first before collisions, and collision check needs to look at old tron state
-        isValidGameState = not (isOutOfBounds nextTs) && not (isCollideWithJetTrail ts move)
+        isValidGameState = not (isOutOfBounds nextTs) && not (willCollideWithJetTrail ts move)
 
 -- | @printNextGameState tronState@
 -- Our proof of concept demo will use this function which repeatedly asks you each time whether to move right, left, or forward
