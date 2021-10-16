@@ -1,12 +1,7 @@
 -- TODO properly document all code
-module Lib
-    ( someFunc
-    ) where
+module Lib where
 
 import Data.Matrix
-
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
 
 -- | Constants
 width = 20
@@ -66,7 +61,6 @@ changeDirection East MoveRight = South
 changeDirection West MoveRight = North
 changeDirection d MoveForward = d
 
--- TODO write tests
 -- | @calculateNextPosition direction position@ calculates the next position based on the specified direction
 -- ASSUME that (1,1) corresponds to the top left position of the matrix
 calculateNextPosition :: Direction -> Position -> Position
@@ -81,11 +75,14 @@ calculateNextPosition West  (row,col) = (row, col-1)
 isOutOfBounds :: TronState -> Bool
 isOutOfBounds ts = False
 
--- | TODO check if hit jet trail
-  -- TODO tests
--- ERIC
-isCollideWithJetTrail :: TronState -> Bool
-isCollideWithJetTrail ts = False
+-- | @isCollideWithJetTrail tronState move@ checks for any future collisions
+-- produces True if the player's current position and move will collide with any jet trail, False otherwise
+-- ASSUME the player's new position after moving is not out of bounds
+-- TODO tests
+isCollideWithJetTrail :: TronState -> Move -> Bool
+isCollideWithJetTrail (TronState m (Player d p)) move = getElem newRow newCol m /= 0
+  where newDirection = changeDirection d move
+        (newRow, newCol) = calculateNextPosition newDirection p
 
 -- TODO tests
 updatePlayerDirection :: Player -> Move -> Player
@@ -125,7 +122,8 @@ nextGameState ts move = if isValidGameState then Just nextTs else Nothing
                         MoveLeft -> moveLeft ts
                         MoveRight -> moveRight ts
                         MoveForward -> moveForward ts
-        isValidGameState = not (isOutOfBounds nextTs) && not (isCollideWithJetTrail nextTs)
+        -- IMPORTANT: check out of bounds first before collisions, and collision check needs to look at old tron state
+        isValidGameState = not (isOutOfBounds nextTs) && not (isCollideWithJetTrail ts move)
 
 -- | @printNextGameState tronState@
 -- Our proof of concept demo will use this function which repeatedly asks you each time whether to move right, left, or forward
