@@ -86,25 +86,22 @@ To run the code:
 - `cd` into the `haskell` directory
 - open VS Code on that directory (`code .`)
 - run the following commands
-```
-stack ghci
-:l app/Main.hs
-main
-```
-- What this does and what to do next:
-    - Running `main` will execute our proof of concept for the game Tron
-    - You can choose from the specified commands what to do next, each instruction will advance the game state into its next state based on the command provided
-    - Some interesting cases to try
-        - What happens if a player collides into their own jet trail?
-        - What happens if a player travels out of bounds?
+    - `stack ghci`
+    - `:l app/Main.hs`
+    - `main`
+    - Remarks:
+        - Running `main` will execute our proof of concept for the game Tron
+        - You can choose from the specified commands what to do next, each instruction will advance the game state into its next state based on the command provided
+        - Some interesting cases to try
+            - What happens if a player collides into their own jet trail?
+            - What happens if a player travels out of bounds?
 - Other interesting cases to try
-    ```
-    // Make sure to execute the following instructions
-    stack ghci
-    :l src/Lib.hs
-    ```
-    - `initTronState` - see how state is represented in our game!
-    - `printNextGameState initTronState` - this is what `main` is calling! We used recursive IO to implement this
+    - Make sure to execute the following instructions first
+    - `stack ghci`
+    - `:l src/Lib.hs`
+    - Try
+        - `initTronState` - see how state is represented in our game!
+        - `printNextGameState initTronState` - this is what `main` is calling! We used recursive IO to implement this
 
 To run the tests:
 - `cd` into the `haskell` directory
