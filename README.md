@@ -1,18 +1,11 @@
-# CPSC 312 Project
+<p>
+    <p>Welcome to our project:</p>
+    <a href="https://github.com/DenverCoder1/readme-typing-svg">
+      <img src="https://readme-typing-svg.herokuapp.com?font=consolas&color=%2311A1F7&size=30&lines=TRON" />
+    </a>
+</p>
 
-Project Template for CPSC 312 Projects. Use this for both your proposal and final project submission.
-
-(Since you are submitting a link to a specific commit, we will be able to tell the difference.)
-
-The template to edit begins below. You can delete this header section once you've begun.
-
-We will post some additional material to include when you reach the final project stage.
-
-# Insert My Excellent Project Title Here
-
-This will be replaced with a very brief (one paragraph, 2-3 sentences) overview of the project.
-
-Leave the following sentence in so you can easily link back to the requirements and *especially* rubric while editing your project:
+Our project will be a recreation of the [Tron Light Cycle](https://en.wikipedia.org/wiki/Tron_(video_game)) game. The objective is to force enemy light cycles into walls and jet trails, while also avoiding them.
 
 This project is in fulfillment of the [CPSC 312 2021W1 project requirements](https://steven-wolfman.github.io/cpsc-312-website/project.html).
 
@@ -23,9 +16,13 @@ Our team is:
 + Eric Kuo
 + Duy Nguyen
 
-We call ourselves: optional awesome team name.
-
 ## Product Pitch
+
+<img src="https://i.pinimg.com/originals/56/e4/1b/56e41b45b51feda58b668cdd4c9a0ff2.gif" style="width:400px;"/>
+<img src="https://i.pinimg.com/originals/a6/78/cf/a678cfba3e2f13ff3afc4bde10bb29dd.gif" style="width:401px">
+
+Cool right?!? You’ve got to admit-we’ve all wanted to ride a [light cycle](https://www.google.com/url?q=https://tron.fandom.com/wiki/Light_Cycle_(1st_generation)&sa=D&source=docs&ust=1634800939945000&usg=AOvVaw2cBCh7lBM4DyGAgnFsSqL_) before, even if this is your first time hearing about it. Tron was one of our favourite childhood movies growing up and as kids, we’ve always thought this was what actually happened inside our machines; a world existing within chips and circuits. 
+
 
 Replace this with a pitch for your project and the problem it solves. This is your vision for what the project
 would like like as a complete product, ready for awesome action. (Yes, awesomeness seems to be a theme.)
@@ -86,8 +83,36 @@ A good goal to aim for is the top rubric item from proposal grading:
 
 ### How to test and run the code: Haskell
 
-Replace this section with instructions to us for how to test and run your code.
+To run the code:
+- `cd` into the `haskell` directory
+- open VS Code on that directory (`code .`)
+- run the following commands
+```
+stack ghci
+:l app/Main.hs
+main
+```
+- What this does and what to do next:
+    - Running `main` will execute our proof of concept for the game Tron
+    - You can choose from the specified commands what to do next, each instruction will advance the game state into its next state based on the command provided
+    - Some interesting cases to try
+        - What happens if a player collides into their own jet trail?
+        - What happens if a player travels out of bounds?
+- Other interesting cases to try
+    ```
+    // Make sure to execute the following instructions
+    stack ghci
+    :l src/Lib.hs
+    ```
+    - `initTronState` - see how state is represented in our game!
+    - `printNextGameState initTronState` - this is what `main` is calling! We used recursive IO to implement this
 
+To run the tests:
+- `cd` into the `haskell` directory
+- open VS Code on that directory (`code .`)
+- run `stack test`
+
+### Legacy notes from original markdown
 As it is currently set up, editing works best if you first `cd` into the `haskell` subdirectory and open VS Code on that directory (`code .`). There is a `Makefile` with some helpful aliases, but you can also just use `stack` as normal.
 
 Note: We expect to be able to test your code by running `stack test`. Included among your tests should be some that demonstrate the core functionality of your code. (We will be running `make haskell-eval` from the project root.)
@@ -95,11 +120,4 @@ Note: We expect to be able to test your code by running `stack test`. Included a
 We should be able to further explore your code's functionality by running `stack ghci`, and you should instruct us on some interesting cases to try.
 
 If you include instructions different from these, be **absolutely sure** that they will work well for us in whatever environment we run your code and that they will be as easy to use as the instructions above!
-
-### How to test and run the code: Prolog
-
-Replace this section with instructions to us for how to test and run your code.
-
-Instructions coming soon, but we expect you'll use the [Prolog Unit Testing](https://www.swi-prolog.org/pldoc/doc_for?object=section(%27packages/plunit.html%27)) library for testing and that we'll be able to run your code with `swipl`.
-
 
