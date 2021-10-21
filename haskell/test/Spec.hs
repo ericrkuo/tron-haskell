@@ -7,7 +7,13 @@ main :: IO ()
 main = defaultMain tests
 
 tests :: TestTree
-tests = testGroup "Tests" [initStateTests, changeDirectionTests, calculateNextPositionTests, jetTrailCollisionTests]
+tests = testGroup "Tests" [
+  initStateTests,
+  changeDirectionTests,
+  calculateNextPositionTests,
+  jetTrailCollisionTests,
+  moveFowardTests,
+  moveRightTests]
 
 -- main = defaultMain $ testGroup "Tests" $
 --   [ testCase "Addition works" $ do
@@ -72,7 +78,7 @@ calculateNextPositionTests = testGroup "calculateNextPosition unit tests"
 
     , testCase "calculateNextPosition South" $
       calculateNextPosition South (10, 10) @?= (11, 10)
-      
+
     , testCase "calculateNextPosition East" $
       calculateNextPosition East (10, 10) @?= (10, 11)
 
@@ -124,7 +130,7 @@ jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
       willCollideWithJetTrail
         (mockTronState (fromLists [[1,1,1], [0,0,1], [1,1,1]]) North (2,2))
         MoveLeft @?= False
-    
+
     -- starting at (2,2) North, MoveRight should not collide
     -- ┌       ┐
     -- │ 1 1 1 │
@@ -168,6 +174,93 @@ jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
       willCollideWithJetTrail
         (mockTronState (fromLists [[0,0,0], [1,0,0], [0,0,0]]) North (2,2))
         MoveLeft @?= True
+  ]
+
+
+moveFowardTests = testGroup "moveFoward unit tests"
+  [
+    -- starting at (2,2) West, should be able to move forward
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ * 1 0 │ (* is where we expect to be)
+    -- │ 0 0 0 │
+    -- └       ┘
+    testCase "move forward west" $
+      moveForward (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) West (2,2))
+      @?= mockTronState (fromLists [[0,0,0], [1,1,0], [0,0,0]]) West (2,1)
+
+    -- starting at (2,2) East, should be able to move forward
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ 0 1 * │ (* is where we expect to be)
+    -- │ 0 0 0 │
+    -- └       ┘
+    ,testCase "move forward east" $
+      moveForward (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) East (2,2))
+      @?= mockTronState (fromLists [[0,0,0], [0,1,1], [0,0,0]]) East (2,3)
+
+    -- starting at (2,2) South, should be able to move forward
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ 0 1 0 │ (* is where we expect to be)
+    -- │ 0 * 0 │
+    -- └       ┘
+    ,testCase "move forward south" $
+      moveForward (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) South (2,2))
+      @?= mockTronState (fromLists [[0,0,0], [0,1,0], [0,1,0]]) South (3,2)
+
+    -- starting at (2,2) North, should be able to move forward
+    -- ┌       ┐
+    -- │ 0 * 0 │
+    -- │ 0 1 0 │ (* is where we expect to be)
+    -- │ 0 0 0 │
+    -- └       ┘
+    ,testCase "move forward north" $
+      moveForward (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) North (2,2))
+      @?= mockTronState (fromLists [[0,1,0], [0,1,0], [0,0,0]]) North (1,2)
+  ]
+
+moveRightTests = testGroup "moveRight unit tests"
+  [
+    -- starting at (2,2) West, should be able to move right
+    -- ┌       ┐
+    -- │ 0 * 0 │
+    -- │ 0 1 0 │ (* is where we expect to be)
+    -- │ 0 0 0 │
+    -- └       ┘
+    testCase "move right from west should go north" $
+      moveRight (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) West (2,2))
+      @?= mockTronState (fromLists [[0,1,0], [0,1,0], [0,0,0]]) North (1,2)
+
+    -- starting at (2,2) East, should be able to move right
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ 0 1 0 │ (* is where we expect to be)
+    -- │ 0 * 0 │
+    -- └       ┘
+    ,testCase "move right from east should go south" $
+      moveRight (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) East (2,2))
+      @?= mockTronState (fromLists [[0,0,0], [0,1,0], [0,1,0]]) South (3,2)
+
+    -- starting at (2,2) South, should be able to move right
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ * 1 0 │ (* is where we expect to be)
+    -- │ 0 0 0 │
+    -- └       ┘
+    ,testCase "move right from south should go west" $
+      moveRight (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) South (2,2))
+      @?= mockTronState (fromLists [[0,0,0], [1,1,0], [0,0,0]]) West (2,1)
+
+    -- starting at (2,2) North, should be able to move right
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ 0 1 * │ (* is where we expect to be)
+    -- │ 0 0 0 │
+    -- └       ┘
+    ,testCase "move right from north should go east" $
+      moveRight (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) North (2,2))
+      @?= mockTronState (fromLists [[0,0,0], [0,1,1], [0,0,0]]) East (2,3)
   ]
 
 mockTronState :: Matrix Int -> Direction -> Position -> TronState

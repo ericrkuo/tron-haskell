@@ -94,12 +94,10 @@ updatePlayerDirection (Player d pos) move = Player (changeDirection d move) pos
 moveLeft :: TronState -> TronState
 moveLeft = undefined
 
--- TODO tests
 -- @moveRight tronState@ moves the player right and forward
 moveRight :: TronState -> TronState
 moveRight (TronState m p) = moveForward (TronState m (updatePlayerDirection p MoveRight))
 
--- TODO tests
 -- @moveForward tronState@ moves the current player forward in their direction and updates the matrix
 moveForward :: TronState -> TronState
 moveForward (TronState matrix (Player d pos)) = TronState newMatrix (Player d newPos)
