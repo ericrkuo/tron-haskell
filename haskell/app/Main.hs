@@ -3,4 +3,7 @@ module Main where
 import Lib
 
 main :: IO ()
-main = someFunc
+main = printNextGameState initTronState
+
+-- TODO try something with gloss
+-- TODO try something listening to keyboard events
