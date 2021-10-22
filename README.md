@@ -35,11 +35,11 @@ After our lecture about the Magic Sum game, Duy and I were curious not only abou
 - How can we handle user-controlled events and progression?
 - How easy is it to navigate/update between different states of a game in Haskell?
 
-We realized these are common questions larger audiences probably have as well when designing games with the above requirements. As a result, with so many questions pondering in our heads, we thought to ourselves, why not combine our love for Tron and Haskell together and answer our questions by getting our hands dirty! Living in the world of Tron and riding a light cycle has always been a dream, but in the meantime _"You dream it, we build it!"_
+We realized these are common questions larger audiences probably have as well when designing games with the above requirements. As a result, with so many questions pondering in our heads, we thought to ourselves, why not combine our love for Tron and Haskell together and answer our questions by getting our hands dirty! Living in the world of Tron and riding a light cycle has always been a dream, but in the meantime while you dream it, we'll build it!
 
 ## Minimal Viable Project
 With most of the groundwork for our game complete, we can focus more time on our MVP to really leverage the features of Haskell and to take our project to the next level.
-We plan on adding the following features:
+We plan on refining the following concepts and incorporating the specified features:
 
 ### CPUs varying in difficulty
 As of right now, we only have a Beginner (Dummy) CPU which moves in the same direction the whole time. We plan on adding more complex algorithms that will allow our CPUs to become more challenging. Since we already added functionality in our proof-of-concept to support CPUs of varying difficulties, this is only a matter of adding new algorithms.
@@ -49,7 +49,7 @@ This could involve concepts we learned in class about game trees, next moves, mi
 ### Abstracting and refining our code
 We plan on leveraging concepts we learned in class about Haskell to make our code more readable, performant, and to also build upon the concepts from the Magic Sum lecture such as using type classes to represent our game state. 
 
-Furthermore, since there are no side effects in Haskell, things like passing around state and handling collisions with jet trails/walls will be much easier to test and help us be more confident that things are working correctly. We also plan on taking advantage of how easy it is to define total functions in Haskell. For example, the [Data.Matrix](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html) package has implementations of [safeGet](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html#v:safeGet) and [safeSet](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html#v:safeSet). This will allow us to define total functions for operations on matrices, which will also help us create more robust error handling whenever a player collides or goes out of bound.
+Furthermore, since there are no side effects in Haskell, things like passing around state and handling collisions with jet trails/walls will be much easier to test and help us be more confident that things are working correctly. We also plan on taking advantage of how easy it is to define total functions in Haskell. For example, the [Data.Matrix](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html) package has implementations of [safeGet](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html#v:safeGet) and [safeSet](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html#v:safeSet). This will allow us to define total functions involving matrices, which will also help us create more robust error handling whenever a player collides or goes out of bound.
 
 Finally, we also want to be able to create objects that have a functional nature and by leveraging the strongly typed features of Haskell, we can reduce common type mistakes in our code when dealing with large data types by leveraging compile-time errors and by telling what a function is doing just by its signature.
 
