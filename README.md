@@ -1,6 +1,6 @@
 <p>
     <a href="https://github.com/DenverCoder1/readme-typing-svg">
-      <img src="https://readme-typing-svg.herokuapp.com?font=consolas&color=%2311A1F7&size=30&lines=Welcome to: Tron" />
+      <img src="https://readme-typing-svg.herokuapp.com?font=consolas&color=%2311A1F7&size=30&height=40&lines=Welcome to: Tron" />
     </a>
 </p>
 
@@ -19,18 +19,19 @@ Our team is:
 
 <img src="https://i.pinimg.com/originals/56/e4/1b/56e41b45b51feda58b668cdd4c9a0ff2.gif" width="400"/> <img src="https://i.pinimg.com/originals/a6/78/cf/a678cfba3e2f13ff3afc4bde10bb29dd.gif" width="400">
 
-Cool right?!? You’ve got to admit-we’ve all wanted to ride a [light cycle](https://www.google.com/url?q=https://tron.fandom.com/wiki/Light_Cycle_(1st_generation)&sa=D&source=docs&ust=1634800939945000&usg=AOvVaw2cBCh7lBM4DyGAgnFsSqL_) before, even if this is your first time hearing about it. Tron was one of our favourite childhood movies growing up and as kids, we’ve always thought this was what actually happened inside our machines; a world existing within chips and circuits. 
+Cool right?!? You’ve got to admit-we’ve all wanted to ride a [light cycle](https://tron.fandom.com/wiki/Light_Cycle_(1st_generation)) before, even if this is your first time hearing about it. Tron was one of our favourite childhood movies growing up and as kids, we’ve always thought this was what actually happened inside our machines; a world existing within chips and circuits. 
 
 ### Objective
-The objective of the game is simple: a player and CPU will keep moving in a grid as time advances, leaving a trail (“jet trail”) behind them wherever they go. A player wins when their opponent crashes into either the boundaries or the jet trail of the CPU or their own. To win, players must avoid crashing and maneuver instead to force the opposing player to crash.
+The objective of the game is simple: a player and CPU will keep moving in a grid as time advances, leaving a trail (“jet trail”) behind them wherever they go. A player wins when their opponent crashes into either the boundaries or any jet trail (their own or the CPUs). To win, players must avoid crashing and maneuver instead to force the opposing player to crash.
 
 ### Motivation and why this matters to us
 After our lecture about the Magic Sum game, Duy and I were curious not only about how feasible Haskell is for creating complex games but were inspired to look into the following concepts:
-- How one can enforce the rules of the game (e.g. where a player can move)?
+- How can we enforce the rules of a game (e.g. where a player can move)?
 - How can we efficiently represent the state of a program for CPUs to make decisions on?
-- How one can handle user-controlled events and progression?
+- How can we handle user-controlled events and progression?
 - How easy is it to navigate/update between different states of a game in Haskell?
-With so many questions, we thought to ourselves, why not combine our love for Tron with Haskell!
+
+We realized these are common questions larger audiences probably have as well when designing games with the above requirements. As a result, with so many questions pondering in our heads, we thought to ourselves, why not combine our love for Tron and Haskell together and answer our questions by getting our hands dirty! Living in the world of Tron and riding a light cycle has always been a dream, but as many others say _"You dream it, we build it!"_
 
 ### TODO MENTION HOW ITS COMPELLING TO LARGER AUDIENCE
 
@@ -39,7 +40,7 @@ With most of the groundwork for our game complete, we can focus more time on our
 We plan on adding the following features:
 
 ### Multiple levels of difficulty of AI
-As of right now, we only have a Beginner (Dummy) CPU which moves in the same direction the whole time. We plan on adding more complex algorithms that will allow our CPUs to become more challenging. Since we already added functionality in our proof-of-concept to support CPU’s of varying difficulties, this is only a matter of adding new algorithms.
+As of right now, we only have a Beginner (Dummy) CPU which moves in the same direction the whole time. We plan on adding more complex algorithms that will allow our CPUs to become more challenging. Since we already added functionality in our proof-of-concept to support CPUs of varying difficulties, this is only a matter of adding new algorithms.
 
 This could involve concepts we learned in class about game trees, next moves, min-maxing, or new algorithms that we discover/create!
 
@@ -48,12 +49,12 @@ We plan on leveraging concepts we learned in class about Haskell to make our cod
 
 Furthermore, since there are no side effects in Haskell, things like passing around state and handling collisions with jet trails/walls will be much easier to test and help us be more confident that things are working correctly. This will also help us create more robust error handling whenever a player collides or goes out of bound.
 
-Finally, we also want to be able to create objects that have a functional nature and by leveraging the strongly typed features of Haskell, we can figure out errors more easily and tell what a function is doing just by its signature.
+Finally, we also want to be able to create objects that have a functional nature and by leveraging the strongly typed features of Haskell, we can reduce common type mistakes in our code when dealing with large data types by leveraging compile-time errors and by telling what a function is doing just by its signature.
 
 ### Haskell’s module system
-For our MVP, we can leverage the power of Haskell’s module system by separating our code into different modules like a player module, CPU module, game state module, and more. This will lead to a more manageable and less coupled code that can be tested independently and easily modified in the future.
+We can also take advantage of Haskell’s module system by separating our code into different modules like a player module, CPU module, game state module, and more. This will lead to a more manageable and less coupled code that can be tested independently and easily modified in the future.
 
-### Packges! - Matrices, listening to user inputs, UI
+### Packages! - Matrices, listening to user inputs, UI
 Lastly, like every game, we want to add visuals! This will naturally lead us to learn and apply some new package/concepts of the language we have not touched before. In addition to the `Data.Matrix` package mentioned in our proof of concept, we are curious to learn how keyboard events are handled in Haskell and how graphics are rendered. Some packages our group has been looking into are `Gloss` and `System.Console.ANSI`; we cannot wait to play around with that!
 
 Make clear:
@@ -81,8 +82,9 @@ We prototyped functionality that will allow the state of the game to detect when
 
 ### 4. IO
 
-We wanted some way for users to interact with our proof of concept. This was accomplished by allowing users to specify in the terminal which direction they wanted to go, and to visually see the state of the game.
+We wanted some way for users to interact with our proof of concept. This was accomplished by allowing users to specify in the terminal which direction they wanted to go and to visually see the state of the game.
 We prototyped this behaviour using recursive IO to pass the state around and to print out the player and CPU moves.
+[TODO ADD LINK printNextGameState]()
 > Sneak Preview! Refer to instructions below to see how to run our code.
 <img src="https://media.github.students.cs.ubc.ca/user/1272/files/e54d2280-329b-11ec-9215-78f3e097ac1b" width="300">
 
@@ -96,9 +98,9 @@ By laying out the groundwork for how we want to represent the state of our game 
 We were also curious about how to model direction, players, and moves, which are crucial aspects of any game that needs to be aware of their sense of direction. Hence, this led to several algebraic data types and some type-synonyms.
 
 ### How this gives us the confidence to complete our MVP
-By having our core logic and thoroughly tested code, we can focus more of our time and resources on exploring different libraries for UI like Gloss, how to read keyboard inputs, and refining our code to take on more Haskell features. 
+By having our core logic implemented and thoroughly tested code, we can focus more of our time and resources on exploring different libraries for UI like Gloss, how to read keyboard inputs, and refining our code to take on more Haskell features. 
 
-By prototyping with several other external libraries to decide how to represent the state of the game, we are more confident now with how to use and incorporate them into our code.
+Furthermore, after spending type prototyping with several external packages to represent the state of the game, we are more confident now with manage and use packages in our code.
 
 ### How to test and run the code: Haskell
 
@@ -112,7 +114,7 @@ To run the code:
     - Remarks:
         - Running `main` will execute our proof of concept for the game Tron
         - You can choose from the specified commands what to do next, each instruction will advance the game state into its next state based on the command provided
-        - Each entry print two things: your move and where the CPU decided to move.
+        - Each entry prints two things: your move and where the CPU decided to move.
         - Some interesting cases to try
             - What happens if a player collides into their own jet trail?
             - What happens if a player travels out of bounds?
@@ -121,7 +123,7 @@ To run the code:
     - `stack ghci`
     - `:l src/Lib.hs`
     - Try
-        - `initTronState` - see how state is represented in our game!
+        - `initTronState` - see how the state is represented in our game!
         - `printNextGameState initTronState` - this is what `main` is calling! We used recursive IO to implement this
 
 To run the tests:
@@ -129,7 +131,7 @@ To run the tests:
 - open VS Code on that directory (`code .`)
 - run `stack test`
 
-## A road down memory-lane
+## A road down memory lane
 As always, we can't forget our basics! We had a great time following the HtDW recipe from CPSC 110
 <img src="https://media.github.students.cs.ubc.ca/user/1272/files/e46cbe80-32a4-11ec-9f52-22da8ddb2d10" width="500">
 
