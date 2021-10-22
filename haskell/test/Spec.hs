@@ -15,6 +15,8 @@ tests = testGroup "Tests" [
   moveFowardTests,
   moveRightTests]
 
+mockPlayer = Player West (-100,-100)
+
 -- main = defaultMain $ testGroup "Tests" $
 --   [ testCase "Addition works" $ do
 --       2 + 3 @?= 5  -- actual @?= expected
@@ -31,7 +33,12 @@ tests = testGroup "Tests" [
 initStateTests = testGroup "initState unit tests"
   [
     testCase "initital tron state" $
-      initTronState  @?= TronState (setElem pMark (height `div` 2, width `div` 2) (zero height width)) (Player West (height `div` 2, width `div` 2))
+      initTronState  @?= TronState
+      (setElem cpuMark (div height 2, width - 2) (setElem pMark (div height 2, 3) (zero height width)))
+      (Player East (div height 2, 3))
+      (Player West (div height 2, width - 2))
+      P
+      Beginner 
   ]
 
 changeDirectionTests = testGroup "changeDirection unit tests"
@@ -106,7 +113,7 @@ jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
     -- └       ┘
     , testCase "no collision moving forward surrounded by jetrails" $
       willCollideWithJetTrail
-        (mockTronState (fromLists [[1,1,1], [1,0,1], [1,0,1], [1,1,1]]) South (2,2))
+        (TronState (fromLists [[1,1,1], [1,0,1], [1,0,1], [1,1,1]]) (Player South (2,2)) mockPlayer P Beginner)
         MoveForward @?= False
 
     -- starting at (2,2) North, MoveRight should not collide
@@ -117,7 +124,7 @@ jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
     -- └       ┘
     , testCase "no collision moving right surrounded by jetrails" $
       willCollideWithJetTrail
-        (mockTronState (fromLists [[1,1,1], [1,0,0], [1,1,1]]) North (2,2))
+        (TronState (fromLists [[1,1,1], [1,0,0], [1,1,1]]) (Player North (2,2)) mockPlayer P Beginner)
         MoveRight @?= False
 
     -- starting at (2,2) North, MoveLeft should not collide
@@ -128,7 +135,7 @@ jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
     -- └       ┘
     , testCase "no collision moving left surrounded by jetrails" $
       willCollideWithJetTrail
-        (mockTronState (fromLists [[1,1,1], [0,0,1], [1,1,1]]) North (2,2))
+        (TronState (fromLists [[1,1,1], [0,0,1], [1,1,1]]) (Player North (2,2)) mockPlayer P Beginner)
         MoveLeft @?= False
 
     -- starting at (2,2) North, MoveRight should not collide
@@ -139,7 +146,7 @@ jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
     -- └       ┘
     , testCase "no collision moving right surrounded by jetrails" $
       willCollideWithJetTrail
-        (mockTronState (fromLists [[1,1,1], [1,0,0], [1,1,1]]) North (2,2))
+        (TronState (fromLists [[1,1,1], [1,0,0], [1,1,1]]) (Player North (2,2)) mockPlayer P Beginner)
         MoveRight @?= False
 
     -- starting at (2,2) North, MoveForward should collide
@@ -150,7 +157,7 @@ jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
     -- └       ┘
     , testCase "collision moving forward" $
       willCollideWithJetTrail
-        (mockTronState (fromLists [[0,1,0], [0,0,0], [0,0,0]]) North (2,2))
+        (TronState (fromLists [[0,1,0], [0,0,0], [0,0,0]]) (Player North (2,2)) mockPlayer P Beginner)
         MoveForward @?= True
 
     -- starting at (2,2) North, MoveRight should collide
@@ -161,7 +168,7 @@ jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
     -- └       ┘
     , testCase "collision moving right" $
       willCollideWithJetTrail
-        (mockTronState (fromLists [[0,0,0], [0,0,1], [0,0,0]]) North (2,2))
+        (TronState (fromLists [[0,0,0], [0,0,1], [0,0,0]]) (Player North (2,2)) mockPlayer P Beginner)
         MoveRight @?= True
 
     -- starting at (2,2) North, MoveLeft should collide
@@ -172,8 +179,46 @@ jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
     -- └       ┘
     , testCase "collision moving left" $
       willCollideWithJetTrail
-        (mockTronState (fromLists [[0,0,0], [1,0,0], [0,0,0]]) North (2,2))
+        (TronState (fromLists [[0,0,0], [1,0,0], [0,0,0]]) (Player North (2,2)) mockPlayer P Beginner)
         MoveLeft @?= True
+
+    -- starting at (2,2) North, MoveLeft should collide
+    -- ┌         ┐
+    -- │  0 0 0  │
+    -- │ -1 0 0  │
+    -- │  0 0 0  │
+    -- └         ┘
+    , testCase "collision moving left into CPU trail" $
+      willCollideWithJetTrail
+        (TronState (fromLists [[0,0,0], [-1,0,0], [0,0,0]]) (Player North (2,2)) mockPlayer P Beginner)
+        MoveLeft @?= True
+
+    -- starting at (2,2) North, MoveLeft should collide
+    -- ┌         ┐
+    -- │  0 0 0  │
+    -- │ -1 0 0  │
+    -- │  0 0 0  │
+    -- └         ┘
+    , testCase "CPU - collision moving left into own trail" $
+      willCollideWithJetTrail
+        (TronState (fromLists [[0,0,0], [-1,0,0], [0,0,0]]) mockPlayer (Player North (2,2)) CPU Beginner)
+        MoveLeft @?= True
+
+    -- starting at (2,2) North, MoveLeft should collide
+    -- ┌         ┐
+    -- │  0 0 0  │
+    -- │  1 0 0  │
+    -- │  0 0 0  │
+    -- └         ┘
+    , testCase "CPU - collision moving left into player trail" $
+      willCollideWithJetTrail
+        (TronState (fromLists [[0,0,0], [-1,0,0], [0,0,0]]) mockPlayer (Player North (2,2)) CPU Beginner)
+        MoveLeft @?= True
+
+    , testCase "CPU - no collision moving forward surrounded by jetrails" $
+      willCollideWithJetTrail
+        (TronState (fromLists [[1,1,1], [-1,0,-1], [-1,0,-1], [-1,1,-1]]) mockPlayer (Player South (2,2)) CPU Beginner)
+        MoveForward @?= False
   ]
 
 
@@ -185,9 +230,9 @@ moveFowardTests = testGroup "moveFoward unit tests"
     -- │ * 1 0 │ (* is where we expect to be)
     -- │ 0 0 0 │
     -- └       ┘
-    testCase "move forward west" $
-      moveForward (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) West (2,2))
-      @?= mockTronState (fromLists [[0,0,0], [1,1,0], [0,0,0]]) West (2,1)
+    testCase "move forward west - player turn" $
+      moveForward (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player West (2,2)) mockPlayer P Beginner)
+      @?= TronState (fromLists [[0,0,0], [1,1,0], [0,0,0]]) (Player West (2,1)) mockPlayer CPU Beginner
 
     -- starting at (2,2) East, should be able to move forward
     -- ┌       ┐
@@ -195,9 +240,9 @@ moveFowardTests = testGroup "moveFoward unit tests"
     -- │ 0 1 * │ (* is where we expect to be)
     -- │ 0 0 0 │
     -- └       ┘
-    ,testCase "move forward east" $
-      moveForward (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) East (2,2))
-      @?= mockTronState (fromLists [[0,0,0], [0,1,1], [0,0,0]]) East (2,3)
+    ,testCase "move forward east - player turn" $
+      moveForward (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player East (2,2)) mockPlayer P Beginner)
+      @?= TronState (fromLists [[0,0,0], [0,1,1], [0,0,0]]) (Player East (2,3)) mockPlayer CPU Beginner
 
     -- starting at (2,2) South, should be able to move forward
     -- ┌       ┐
@@ -205,9 +250,9 @@ moveFowardTests = testGroup "moveFoward unit tests"
     -- │ 0 1 0 │ (* is where we expect to be)
     -- │ 0 * 0 │
     -- └       ┘
-    ,testCase "move forward south" $
-      moveForward (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) South (2,2))
-      @?= mockTronState (fromLists [[0,0,0], [0,1,0], [0,1,0]]) South (3,2)
+    ,testCase "move forward south - player turn" $
+      moveForward (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player South (2,2)) mockPlayer P Beginner)
+      @?= TronState (fromLists [[0,0,0], [0,1,0], [0,1,0]]) (Player South (3,2)) mockPlayer CPU Beginner
 
     -- starting at (2,2) North, should be able to move forward
     -- ┌       ┐
@@ -215,9 +260,49 @@ moveFowardTests = testGroup "moveFoward unit tests"
     -- │ 0 1 0 │ (* is where we expect to be)
     -- │ 0 0 0 │
     -- └       ┘
-    ,testCase "move forward north" $
-      moveForward (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) North (2,2))
-      @?= mockTronState (fromLists [[0,1,0], [0,1,0], [0,0,0]]) North (1,2)
+    ,testCase "move forward north - player turn" $
+      moveForward (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player North (2,2)) mockPlayer P Beginner)
+      @?= TronState (fromLists [[0,1,0], [0,1,0], [0,0,0]]) (Player North (1,2)) mockPlayer CPU Beginner
+
+        -- starting at (2,2) West, should be able to move forward
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ * 1 0 │ (* is where we expect to be)
+    -- │ 0 0 0 │
+    -- └       ┘
+    ,testCase "move forward west - cpu turn" $
+      moveForward (TronState (fromLists [[0,0,0], [0,-1,0], [0,0,0]]) mockPlayer (Player West (2,2)) CPU Beginner)
+      @?= TronState (fromLists [[0,0,0], [-1,-1,0], [0,0,0]]) mockPlayer (Player West (2,1)) P Beginner
+
+    -- starting at (2,2) East, should be able to move forward
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ 0 1 * │ (* is where we expect to be)
+    -- │ 0 0 0 │
+    -- └       ┘
+    ,testCase "move forward east - cpu turn" $
+      moveForward (TronState (fromLists [[0,0,0], [0,-1,0], [0,0,0]]) mockPlayer (Player East (2,2)) CPU Beginner)
+      @?= TronState (fromLists [[0,0,0], [0,-1,-1], [0,0,0]]) mockPlayer (Player East (2,3)) P Beginner
+
+    -- starting at (2,2) South, should be able to move forward
+    -- ┌       ┐
+    -- │ 0 0 0 │
+    -- │ 0 1 0 │ (* is where we expect to be)
+    -- │ 0 * 0 │
+    -- └       ┘
+    ,testCase "move forward south - cpu turn" $
+      moveForward (TronState (fromLists [[0,0,0], [0,-1,0], [0,0,0]]) mockPlayer (Player South (2,2)) CPU Beginner)
+      @?= TronState (fromLists [[0,0,0], [0,-1,0], [0,-1,0]]) mockPlayer (Player South (3,2)) P Beginner 
+
+    -- starting at (2,2) North, should be able to move forward
+    -- ┌       ┐
+    -- │ 0 * 0 │
+    -- │ 0 1 0 │ (* is where we expect to be)
+    -- │ 0 0 0 │
+    -- └       ┘
+    ,testCase "move forward north - cpu turn" $
+      moveForward (TronState (fromLists [[0,0,0], [0,-1,0], [0,0,0]]) mockPlayer (Player North (2,2)) CPU Beginner)
+      @?= TronState (fromLists [[0,-1,0], [0,-1,0], [0,0,0]]) mockPlayer (Player North (1,2)) P Beginner
   ]
 
 moveRightTests = testGroup "moveRight unit tests"
@@ -229,8 +314,8 @@ moveRightTests = testGroup "moveRight unit tests"
     -- │ 0 0 0 │
     -- └       ┘
     testCase "move right from west should go north" $
-      moveRight (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) West (2,2))
-      @?= mockTronState (fromLists [[0,1,0], [0,1,0], [0,0,0]]) North (1,2)
+      moveRight (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player West (2,2)) mockPlayer P Beginner)
+      @?= TronState (fromLists [[0,1,0], [0,1,0], [0,0,0]]) (Player North (1,2)) mockPlayer CPU Beginner
 
     -- starting at (2,2) East, should be able to move right
     -- ┌       ┐
@@ -239,8 +324,8 @@ moveRightTests = testGroup "moveRight unit tests"
     -- │ 0 * 0 │
     -- └       ┘
     ,testCase "move right from east should go south" $
-      moveRight (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) East (2,2))
-      @?= mockTronState (fromLists [[0,0,0], [0,1,0], [0,1,0]]) South (3,2)
+      moveRight (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player East (2,2)) mockPlayer P Beginner)
+      @?= TronState (fromLists [[0,0,0], [0,1,0], [0,1,0]]) (Player South (3,2)) mockPlayer CPU Beginner
 
     -- starting at (2,2) South, should be able to move right
     -- ┌       ┐
@@ -249,8 +334,8 @@ moveRightTests = testGroup "moveRight unit tests"
     -- │ 0 0 0 │
     -- └       ┘
     ,testCase "move right from south should go west" $
-      moveRight (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) South (2,2))
-      @?= mockTronState (fromLists [[0,0,0], [1,1,0], [0,0,0]]) West (2,1)
+      moveRight (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player South (2,2)) mockPlayer P Beginner)
+      @?= TronState (fromLists [[0,0,0], [1,1,0], [0,0,0]]) (Player West (2,1)) mockPlayer CPU Beginner
 
     -- starting at (2,2) North, should be able to move right
     -- ┌       ┐
@@ -259,9 +344,13 @@ moveRightTests = testGroup "moveRight unit tests"
     -- │ 0 0 0 │
     -- └       ┘
     ,testCase "move right from north should go east" $
-      moveRight (mockTronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) North (2,2))
-      @?= mockTronState (fromLists [[0,0,0], [0,1,1], [0,0,0]]) East (2,3)
+      moveRight (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player North (2,2)) mockPlayer P Beginner)
+      @?= TronState (fromLists [[0,0,0], [0,1,1], [0,0,0]]) (Player East (2,3)) mockPlayer CPU Beginner
+
+    ,testCase "CPU - move right from north should go east" $
+      moveRight (TronState (fromLists [[0,0,0], [0,-1,0], [0,0,0]]) mockPlayer (Player North (2,2)) CPU Beginner)
+      @?= TronState (fromLists [[0,0,0], [0,-1,-1], [0,0,0]]) mockPlayer (Player East (2,3)) P Beginner
   ]
 
-mockTronState :: Matrix Int -> Direction -> Position -> TronState
-mockTronState matrix direction pos = TronState matrix (Player direction pos)
+mockTronState :: Matrix Int -> Direction -> Position -> Turn -> TronState
+mockTronState matrix direction pos turn = TronState matrix (Player direction pos) (Player direction pos) turn Beginner 
