@@ -1,6 +1,6 @@
 <p>
     <a href="https://github.com/DenverCoder1/readme-typing-svg">
-      <img src="https://readme-typing-svg.herokuapp.com?font=consolas&color=%2311A1F7&size=30&height=40&lines=Welcome to: Tron" />
+      <img src="https://readme-typing-svg.herokuapp.com?font=consolas&color=%2311A1F7&size=30&height=45&lines=Welcome to: Tron" />
     </a>
 </p>
 
