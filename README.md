@@ -128,6 +128,10 @@ To run the tests:
 - open VS Code on that directory (`code .`)
 - run `stack test`
 
+### A road down memory-lane
+As always, we can't forget our basics! We had a great time following the HtDW recipe from CPSC 110
+<img src="https://media.github.students.cs.ubc.ca/user/1272/files/e46cbe80-32a4-11ec-9f52-22da8ddb2d10" width="500">
+
 ### Legacy notes from original markdown
 As it is currently set up, editing works best if you first `cd` into the `haskell` subdirectory and open VS Code on that directory (`code .`). There is a `Makefile` with some helpful aliases, but you can also just use `stack` as normal.
 
