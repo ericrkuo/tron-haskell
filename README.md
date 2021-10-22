@@ -60,25 +60,44 @@ Or:
 > The MVP clearly builds significantly on the language and will lead in interesting and natural ways to learning for the students.
 
 ## Proof of Concept
+Our proof-of-concept focuses on the logic and functionality of the game Tron. In more detail, it consists of the following:
 
-Replace this with a description of your proof-of-concept. This may be as short as a few paragraphs, or it may be longer.
-It should **definitely** take less than 4 minutes to read carefully and thoroughly, though working through and running the
-code may take an extra 4 minutes. (Your guidance and links should make it easy for us to work through the code.)
+### 1. A way to represent the current state of the game
+At a high level, this includes where the jet trails currently are, the direction and position of players, the difficulty of the CPU, and whose turn it is. This involved creating [TODO ADD LINKE several data types and type synonyms](). We also decided to use the library [Data.Matrix](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html) to represent the state of the game.
 
-Tell us:
+The main idea is that the initial game state starts with a zero matrix, where zero indicates the cell is unoccupied, free for any CPU/player to travel. As time progresses and the players move, a 1 signifies the jet trail of the current player, and a -1 signifies the jet trail of the CPU. In our MVP, the idea is to use the numbers in this matrix as a way to color our cells graphically.
 
-+ what key element of your project the proof-of-concept focuses on
-+ what makes that such an important element
-+ how completing this gives you confidence that, with sufficient work, you could complete the full (minimal viable) project
+- [TODO ADD LINK TronState]()
 
+### 2. A way to advance the current state of the game
+We implemented logic to allow a player and CPU to specify where they want to move next (either left, forward, or right). By knowing the current state of the game, and where a player wants to move, we can appropriately update the matrix and each player’s new position and, direction.
+- [TODO ADD LINK nextGameState]()
+
+### 3. Collision and bound logic
+We prototyped functionality that will allow the state of the game to detect when a player crashes into a wall, and when a player will collide into any jet trail (their own or the CPU’s). This will allow us to detect when the game is over, and who has won.
+- [TODO ADD LINK Collision logic]()
+- [TODO ADD LINK Out of bounds logic]()
+
+### 4. IO
+
+We wanted some way for users to interact with our proof of concept, this means specifying in the terminal which direction they wanted to go, and to visually see the state of the game.
+This was accomplished by using recursive IO to pass the state around and to print out the coordinates of where you decided to move, as well as where the CPU decided to move.
+> Sneak Preview! Refer to instructions below to see how to run our code.
+<img src="https://media.github.students.cs.ubc.ca/user/1272/files/e54d2280-329b-11ec-9215-78f3e097ac1b" width="300">
+
+### TODO
 Include links (likely even line-level links, which are easy to create in Github) throughout to critical pieces of
 the code to make it easy for us to understand what you've accomplished and how it fulfills the requirements.
 
-Also include instructions for us to test and run your code. (See our guidelines below.)
+### How this illustrates a key element of our project
+By laying out the groundwork for how we want to represent the state of our game and the various actions players/CPUs can execute in our game, we can be more confident in ensuring that the core logic of our game works and is feasible to implement. For prototype purposes, we prioritized our time in ensuring the logic and interaction of the game was correct, and experimented with various libraries/packages, leading to our choice of using Data.Matrix.
 
-A good goal to aim for is the top rubric item from proposal grading:
+We were also curious about how to model direction, players, and moves, which are crucial aspects of any game that needs to be aware of their sense of direction. Hence, this led to several algebraic data types and some type-synonyms.
 
-> Fully functional proof-of-concept is easy to use and review, and it clearly demonstrates a key element necessary for the overall project.
+### How this gives us the confidence to complete our MVP
+By having our core logic and thoroughly tested code, we can focus more of our time and resources on exploring different libraries for UI like Gloss, how to read keyboard inputs, and refining our code to take on more Haskell features. 
+
+By prototyping with several other external libraries to decide how to represent the state of the game, we are more confident now with how to use and incorporate them into our code.
 
 ### How to test and run the code: Haskell
 
