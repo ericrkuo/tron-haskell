@@ -41,23 +41,28 @@ Or:
 (It's easy to focus on the product and not the problem. Remember to include both!)
 
 ## Minimal Viable Project
+With most of the groundwork for our game complete, we can focus more time on our MVP to really leverage the features of Haskell and to take our project to the next level.
+We plan on adding the following features:
 
-Replace this with a description of the minimal viable project you will actually build for CPSC 312 (if this becomes your final project).
-It may be as short as a few paragraphs, or it may be longer. It should **definitely** take less than 4 minutes
-to read carefully and thoroughly.
+### Multiple levels of difficulty of AI
+As of right now, we only have a Beginner (Dummy) CPU which moves in the same direction the whole time. We plan on adding more complex algorithms that will allow our CPUs to become more challenging. Since we already added functionality in our proof-of-concept to support CPU’s of varying difficulties, this is only a matter of adding new algorithms.
+
+This could involve concepts we learned in class about game trees, next moves, min-maxing, or new algorithms that we discover/create!
+
+### Abstracting and refining our code
+We plan on leveraging concepts we learned in class about Haskell to make our code more readable, performant, and to also build upon the concepts from the Magic Sum lecture such as using type classes to represent our game state. 
+
+Furthermore, since there are no side effects in Haskell, things like passing around state and handling collisions with jet trails/walls will be much easier to test and help us be more confident that things are working correctly. This will also help us create more robust error handling whenever a player collides or goes out of bound.
+
+### Haskell’s module system
+For our MVP, we can leverage the power of Haskell’s module system by separating our code into different modules like a player module, CPU module, game state module, and more. This will lead to a more manageable and less coupled code that can be tested independently and easily modified in the future.
+
+### Listening to user inputs and UI
+Lastly, like every game, we want to add visuals! This will naturally lead us to learn and apply some new package/concepts of the language we have not touched before, for example how keyboard events are handled in Haskell and how graphics are rendered. One popular package our group saw is Gloss and we cannot wait to play around with that!
 
 Make clear:
-+ how this builds meaningfully toward your product pitch above, without being nearly as much work,
-+ how it builds on the strength and power of the language, and
-+ how it leads naturally to learning and applying some new element of the language (including what that element is!)
-
-Good goals to aim for are from the top two rubric items for proposal grading:
-
-> The minimal viable project (MVP) builds on the strengths and power of the language in exciting ways that will clearly lead to excellent learning for students.
-
-Or:
-
-> The MVP clearly builds significantly on the language and will lead in interesting and natural ways to learning for the students.
++ TODO how this builds meaningfully toward your product pitch above, without being nearly as much work,
++ TODO refine how builds on strengths and power of language
 
 ## Proof of Concept
 Our proof-of-concept focuses on the logic and functionality of the game Tron. In more detail, it consists of the following:
