@@ -130,7 +130,7 @@ moveLeft = undefined
 -- @moveRight tronState@ moves the player right and forward
 moveRight :: TronState -> TronState
 moveRight (TronState m p cpu P d) = moveForward (TronState m (updatePlayerDirection p MoveRight) cpu P d)
-moveRight (TronState m p cpu CPU d) = moveForward (TronState m p (updatePlayerDirection cpu MoveRight ) P d)
+moveRight (TronState m p cpu CPU d) = moveForward (TronState m p (updatePlayerDirection cpu MoveRight ) CPU d)
 
 -- @moveForward tronState@
 -- 1. moves the current player forward in their direction
