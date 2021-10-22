@@ -1,7 +1,6 @@
 <p>
-    <p>Welcome to our project:</p>
     <a href="https://github.com/DenverCoder1/readme-typing-svg">
-      <img src="https://readme-typing-svg.herokuapp.com?font=consolas&color=%2311A1F7&size=30&lines=TRON" />
+      <img src="https://readme-typing-svg.herokuapp.com?font=consolas&color=%2311A1F7&size=30&lines=Welcome to: TRON" />
     </a>
 </p>
 
@@ -22,23 +21,18 @@ Our team is:
 
 Cool right?!? You’ve got to admit-we’ve all wanted to ride a [light cycle](https://www.google.com/url?q=https://tron.fandom.com/wiki/Light_Cycle_(1st_generation)&sa=D&source=docs&ust=1634800939945000&usg=AOvVaw2cBCh7lBM4DyGAgnFsSqL_) before, even if this is your first time hearing about it. Tron was one of our favourite childhood movies growing up and as kids, we’ve always thought this was what actually happened inside our machines; a world existing within chips and circuits. 
 
+### Objective
+The objective of the game is simple: a player and CPU will keep moving in a grid as time advances, leaving a trail (“jet trail”) behind them wherever they go. A player wins when their opponent crashes into either the boundaries or the jet trail of the CPU or their own. To win, players must avoid crashing and maneuver instead to force the opposing player to crash.
 
-Replace this with a pitch for your project and the problem it solves. This is your vision for what the project
-would like like as a complete product, ready for awesome action. (Yes, awesomeness seems to be a theme.)
-It may be as short as a couple of paragraphs, or it may be longer. It should **definitely** take less than 4 minutes
-to read carefully and thoroughly.
+### Motivation and why this matters to us
+After our lecture about the Magic Sum game, Duy and I were curious not only about how feasible Haskell is for creating complex games but were inspired to look into the following concepts:
+- How one can enforce the rules of the game (e.g. where a player can move)?
+- How can we efficiently represent the state of a program for CPUs to make decisions on?
+- How one can handle user-controlled events and progression?
+- How easy is it to navigate/update between different states of a game in Haskell?
+With so many questions, we thought to ourselves, why not combine our love for Tron with Haskell!
 
-Be sure that this touches clearly on the [project requirements](https://steven-wolfman.github.io/cpsc-312-website/project.html#project-requirements).
-
-Good goals to aim for are from the top two rubric items for proposal grading:
-
-> Exciting and language-appropriate product idea tackling a problem that is clearly compelling to a significant audience.
-
-Or:
-
-> Solid and language-appropriate product idea with a problem that is of real interest to the submitting team.
-
-(It's easy to focus on the product and not the problem. Remember to include both!)
+### TODO MENTION HOW ITS COMPELLING TO LARGER AUDIENCE
 
 ## Minimal Viable Project
 With most of the groundwork for our game complete, we can focus more time on our MVP to really leverage the features of Haskell and to take our project to the next level.
@@ -54,11 +48,13 @@ We plan on leveraging concepts we learned in class about Haskell to make our cod
 
 Furthermore, since there are no side effects in Haskell, things like passing around state and handling collisions with jet trails/walls will be much easier to test and help us be more confident that things are working correctly. This will also help us create more robust error handling whenever a player collides or goes out of bound.
 
+Finally, we also want to be able to create objects that have a functional nature and by leveraging the strongly typed features of Haskell, we can figure out errors more easily and tell what a function is doing just by its signature.
+
 ### Haskell’s module system
 For our MVP, we can leverage the power of Haskell’s module system by separating our code into different modules like a player module, CPU module, game state module, and more. This will lead to a more manageable and less coupled code that can be tested independently and easily modified in the future.
 
 ### Listening to user inputs and UI
-Lastly, like every game, we want to add visuals! This will naturally lead us to learn and apply some new package/concepts of the language we have not touched before, for example how keyboard events are handled in Haskell and how graphics are rendered. One popular package our group saw is Gloss and we cannot wait to play around with that!
+Lastly, like every game, we want to add visuals! This will naturally lead us to learn and apply some new package/concepts of the language we have not touched before, for example how keyboard events are handled in Haskell and how graphics are rendered. Some packages our group has been looking into are Gloss and System.Console.ANSI; we cannot wait to play around with that!
 
 Make clear:
 + TODO how this builds meaningfully toward your product pitch above, without being nearly as much work,
@@ -133,7 +129,7 @@ To run the tests:
 - open VS Code on that directory (`code .`)
 - run `stack test`
 
-### A road down memory-lane
+## A road down memory-lane
 As always, we can't forget our basics! We had a great time following the HtDW recipe from CPSC 110
 <img src="https://media.github.students.cs.ubc.ca/user/1272/files/e46cbe80-32a4-11ec-9f52-22da8ddb2d10" width="500">
 
