@@ -122,7 +122,8 @@ getPlayerPosition (Player _ p) = p
 -- TODO tests
 -- DUY
 moveLeft :: TronState -> TronState
-moveLeft = undefined
+moveLeft (TronState m p cpu P d) = moveForward (TronState m (updatePlayerDirection p MoveLeft) cpu P d)
+moveLeft (TronState m p cpu CPU d) = moveForward (TronState m p (updatePlayerDirection cpu MoveLeft ) CPU d)
 
 -- @moveRight tronState@ moves the player right and forward
 moveRight :: TronState -> TronState
