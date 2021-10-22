@@ -53,8 +53,8 @@ Finally, we also want to be able to create objects that have a functional nature
 ### Haskell’s module system
 For our MVP, we can leverage the power of Haskell’s module system by separating our code into different modules like a player module, CPU module, game state module, and more. This will lead to a more manageable and less coupled code that can be tested independently and easily modified in the future.
 
-### Listening to user inputs and UI
-Lastly, like every game, we want to add visuals! This will naturally lead us to learn and apply some new package/concepts of the language we have not touched before, for example how keyboard events are handled in Haskell and how graphics are rendered. Some packages our group has been looking into are Gloss and System.Console.ANSI; we cannot wait to play around with that!
+### Packges! - Matrices, listening to user inputs, UI
+Lastly, like every game, we want to add visuals! This will naturally lead us to learn and apply some new package/concepts of the language we have not touched before. In addition to the `Data.Matrix` package mentioned in our proof of concept, we are curious to learn how keyboard events are handled in Haskell and how graphics are rendered. Some packages our group has been looking into are `Gloss` and `System.Console.ANSI`; we cannot wait to play around with that!
 
 Make clear:
 + TODO how this builds meaningfully toward your product pitch above, without being nearly as much work,
@@ -64,7 +64,7 @@ Make clear:
 Our proof-of-concept focuses on the logic and functionality of the game Tron. In more detail, it consists of the following:
 
 ### 1. A way to represent the current state of the game
-At a high level, this includes where the jet trails currently are, the direction and position of players, the difficulty of the CPU, and whose turn it is. This involved creating [TODO ADD LINKE several data types and type synonyms](). We also decided to use the library [Data.Matrix](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html) to represent the state of the game.
+At a high level, this includes where the jet trails currently are, the direction and position of players, the difficulty of the CPU, and whose turn it is. This involved creating [TODO ADD LINKE several data types and type synonyms](). We also decided to use the library [Data.Matrix](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html) to represent the state of the game. Using this package gives us an opportunity to work with something new in Haskell and to leverage the utility functions that operate on a matrix out of the box.
 
 The main idea is that the initial game state starts with a zero matrix, where zero indicates the cell is unoccupied, free for any CPU/player to travel. As time progresses and the players move, a 1 signifies the jet trail of the current player, and a -1 signifies the jet trail of the CPU. In our MVP, the idea is to use the numbers in this matrix as a way to color our cells graphically.
 
