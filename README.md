@@ -4,7 +4,7 @@
     </a>
 </p>
 
-Our project, Tron, will be a recreation of the [Tron Light Cycle](https://en.wikipedia.org/wiki/Tron_(video_game)) game. The objective is to force enemy light cycles into walls and jet trails, while also avoiding them. The winner of the game is the last person standing
+Our project, Tron, will be a recreation of the [Tron Light Cycle](https://en.wikipedia.org/wiki/Tron_(video_game)) game. The objective is to force enemy light cycles into walls and jet trails, while also avoiding them. The winner of the game is the last person standing.
 
 This project is in fulfillment of the [CPSC 312 2021W1 project requirements](https://steven-wolfman.github.io/cpsc-312-website/project.html).
 
@@ -63,32 +63,30 @@ Lastly, like every game, we want to add visuals! This will naturally lead us to 
 Our proof-of-concept focuses on the logic and functionality of the game Tron. In more detail, it consists of the following:
 
 ### 1. A way to represent the current state of the game
-At a high level, this includes where the jet trails currently are, the direction and position of players, the difficulty of the CPU, and whose turn it is. This involved creating [TODO ADD LINKE several data types and type synonyms](). We also decided to use the library [Data.Matrix](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html) to represent the state of the game. Using this package gives us an opportunity to work with something new in Haskell and to leverage the utility functions that operate on a matrix out of the box.
+At a high level, this includes where the jet trails currently are, the direction and position of players, the difficulty of the CPU, and whose turn it is. This involved creating [several data types and type synonyms](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L16-L44). We also decided to use the library [Data.Matrix](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html) to represent the state of the game. Using this package gives us an opportunity to work with something new in Haskell and to leverage the utility functions that operate on a matrix out of the box.
 
 The main idea is that the initial game state starts with a zero matrix, where zero indicates the cell is unoccupied, free for any CPU/player to travel. As time progresses and the players move, a 1 signifies the jet trail of the current player, and a -1 signifies the jet trail of the CPU. In our MVP, the idea is to use the numbers in this matrix as a way to color our cells graphically.
 
-- [TODO ADD LINK TronState]()
+- Data type for our game state: [TronState](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L46-L54)
+- [initTronState](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L65-L73) initializes our `TronState`
 
 ### 2. A way to advance the current state of the game
 We implemented logic to allow a player and CPU to specify where they want to move next (either left, forward, or right). By knowing the current state of the game, and where a player wants to move, we can appropriately update the matrix and each player’s position and direction.
-- [TODO ADD LINK nextGameState]()
+- [nextGameState](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L148-L160) advances the state based on the specified `Move`
+- [moveLeft](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L124-L126), [moveRight](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L128-L131), [moveForward](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L133-L146) allow us to update the current state
 
 ### 3. Collision and bound logic
 We prototyped functionality that will allow the state of the game to detect when a player crashes into a wall, and when a player will collide into any jet trail (their own or the CPU’s). This will allow us to detect when the game is over, and who has won.
-- [TODO ADD LINK Collision logic]()
-- [TODO ADD LINK Out of bounds logic]()
+- [Jet Trail Collision logic](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L101-L108)
+- [Out of Bounds logic](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L96-L99)
 
 ### 4. IO
 
 We wanted some way for users to interact with our proof of concept. This was accomplished by allowing users to specify in the terminal which direction they wanted to go and to visually see the state of the game.
-We prototyped this behaviour using recursive IO to pass the state around and to print out the player and CPU moves.
-[TODO ADD LINK printNextGameState]()
+We prototyped this behaviour in the function [printNextGameState](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L179-L216) using recursive IO to pass the state around and to print out the player and CPU moves.
+
 > Sneak Preview! Refer to instructions below to see how to run our code.
 <img src="https://media.github.students.cs.ubc.ca/user/1272/files/e54d2280-329b-11ec-9215-78f3e097ac1b" width="300">
-
-### TODO
-Include links (likely even line-level links, which are easy to create in Github) throughout to critical pieces of
-the code to make it easy for us to understand what you've accomplished and how it fulfills the requirements.
 
 ### How this illustrates a key element of our project
 By laying out the groundwork for how we want to represent the state of our game and the various actions players/CPUs can execute in our game, we can be more confident in ensuring that the core logic of our game works and is feasible to implement. For prototype purposes, we prioritized our time in ensuring the logic and interaction of the game was correct, and experimented with various libraries/packages, leading to our choice of using Data.Matrix.
