@@ -13,7 +13,8 @@ tests = testGroup "Tests" [
   calculateNextPositionTests,
   jetTrailCollisionTests,
   moveFowardTests,
-  moveRightTests]
+  moveRightTests,
+  isOutOfBoundsTests]
 
 mockPlayer = Player West (-100,-100)
 
@@ -221,6 +222,40 @@ jetTrailCollisionTests = testGroup "jetTrailCollision unit tests"
         MoveForward @?= False
   ]
 
+isOutOfBoundsTests = testGroup "isOutOfBounds unit tests"
+  [
+    testCase "inital state should not be out of bounds" $
+      isOutOfBounds initTronState @?= False
+
+    -- ┌       ┐
+    -- │ 1 1 1 │
+    -- │ 1 0 1 │
+    -- │ 1 1 1 │
+    -- └       ┘
+    , testCase "should not be out of bounds if within matrix" $
+      isOutOfBounds (TronState (fromLists [[1,1,1], [1,0,1], [1,1,1]]) (Player South (2,2)) mockPlayer P Beginner)
+         @?= False
+
+    , testCase "Should detect if TOP out of bounds" $
+      isOutOfBounds (TronState (fromLists [[1,1,1], [1,1,1], [1,1,1]]) (Player South (0,2)) mockPlayer P Beginner)
+         @?= True
+
+    , testCase "Should detect if BOTTOM out of bounds" $
+      isOutOfBounds (TronState (fromLists [[1,1,1], [1,1,1], [1,1,1]]) (Player South (4,2)) mockPlayer P Beginner)
+         @?= True
+
+    , testCase "Should detect if LEFT out of bounds" $
+      isOutOfBounds (TronState (fromLists [[1,1,1], [1,1,1], [1,1,1]]) (Player South (2,0)) mockPlayer P Beginner)
+         @?= True
+
+    , testCase "Should detect if RIGHT out of bounds" $
+      isOutOfBounds (TronState (fromLists [[1,1,1], [1,1,1], [1,1,1]]) (Player South (2,4)) mockPlayer P Beginner)
+         @?= True
+    
+    , testCase "CPU - Should detect if RIGHT out of bounds" $
+      isOutOfBounds (TronState (fromLists [[1,1,1], [1,1,1], [1,1,1]]) mockPlayer (Player South (2,4)) CPU Beginner)
+         @?= True
+  ]
 
 moveFowardTests = testGroup "moveFoward unit tests"
   [
@@ -263,6 +298,14 @@ moveFowardTests = testGroup "moveFoward unit tests"
     ,testCase "move forward north - player turn" $
       moveForward (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player North (2,2)) mockPlayer P Beginner)
       @?= TronState (fromLists [[0,1,0], [0,1,0], [0,0,0]]) (Player North (1,2)) mockPlayer CPU Beginner
+
+    ,testCase "move forward ABOUT to be out of bounds should not fail, instead give old matrix and update players position" $
+      moveForward (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player West (2,1)) mockPlayer P Beginner)
+      @?= TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player West (2,0)) mockPlayer CPU Beginner
+
+    ,testCase "move forward ALREADY out of bounds should not fail, instead give old matrix and update players position" $
+      moveForward (TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player West (2,0)) mockPlayer P Beginner)
+      @?= TronState (fromLists [[0,0,0], [0,1,0], [0,0,0]]) (Player West (2,-1)) mockPlayer CPU Beginner
 
         -- starting at (2,2) West, should be able to move forward
     -- ┌       ┐

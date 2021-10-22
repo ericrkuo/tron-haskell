@@ -93,22 +93,19 @@ calculateNextPosition South (row,col) = (row+1, col)
 calculateNextPosition East  (row,col) = (row, col+1)
 calculateNextPosition West  (row,col) = (row, col-1)
 
--- | TODO check whether the player is off the grid based off the current players turn
--- TODO tests
--- DUY
+-- | @isOutOfBounds tronState@ checks whether the player is off the grid based off the current players turn
 isOutOfBounds :: TronState -> Bool
-isOutOfBounds ts = False
+isOutOfBounds (TronState m p cpu turn _) = isNothing (safeGet row col m)
+  where (Player dir (row, col)) = if turn == CPU then cpu else p
 
 -- | @willCollideWithJetTrail tronState move@ checks for any future collisions
 -- produces True if the player's current position and move will collide with any jet trail, False otherwise
 -- ASSUME the player's new position after moving is not out of bounds
--- TODO FIX
 willCollideWithJetTrail :: TronState -> Move -> Bool
-willCollideWithJetTrail (TronState m p cpu turn _) move = getElem row' col' m /= 0
+willCollideWithJetTrail (TronState m p cpu turn _) move = fromMaybe 1 (safeGet row' col' m) /= 0
   where currP = if turn == CPU then cpu else p
         dir' = changeDirection (getPlayerDirection currP) move
         (row', col') = calculateNextPosition dir' (getPlayerPosition currP)
-
 
 -- TODO tests
 updatePlayerDirection :: Player -> Move -> Player
@@ -136,15 +133,16 @@ moveRight (TronState m p cpu CPU d) = moveForward (TronState m p (updatePlayerDi
 -- 1. moves the current player forward in their direction
 -- 2. updates the matrix
 -- 3. updates the player turn
+-- Will not throw an error if moving out of bounds, instead do NOT update matrix. Out of bounds logic will check for this
 moveForward :: TronState -> TronState
 moveForward (TronState matrix (Player dir pos) cpu P d) = TronState newMatrix (Player dir newPos) cpu CPU d
   where
       newPos = calculateNextPosition dir pos
-      newMatrix = setElem pMark newPos matrix
+      newMatrix = fromMaybe matrix (safeSet pMark newPos matrix)
 moveForward (TronState matrix p (Player dir pos) CPU d) = TronState newMatrix p (Player dir newPos) P d
   where
       newPos = calculateNextPosition dir pos
-      newMatrix = setElem cpuMark newPos matrix
+      newMatrix = fromMaybe matrix (safeSet cpuMark newPos matrix)
 
 -- | @nextTronStateForPlayer tronState move@ produces the next state of the game based on the current player's move
 -- ASSUME @tronstate@ is valid (that is there are no collisions)
@@ -157,7 +155,7 @@ nextGameState ts move = if isValidGameState then Just nextTs else Nothing
                     MoveLeft -> moveLeft ts
                     MoveRight -> moveRight ts
                     MoveForward -> moveForward ts
-        -- IMPORTANT: check out of bounds first before collisions, and collision check needs to look at old tron state
+        -- IMPORTANT: collision check needs to look at old tron state
         isValidGameState = not (isOutOfBounds nextTs) && not (willCollideWithJetTrail ts move)
 
 advanceCPUState :: TronState -> Maybe TronState
@@ -215,17 +213,3 @@ handleNextTronState ts move =
                         >> putStrLn ("You" ++ getAction p')
                         >> putStrLn "Now it's the CPU's turn..."
                         >> handleNextTronState ts' move
-
--- handleNextTronState Nothing = putStrLn "Game over!"
--- handleNextTronState (Just ts@(TronState matrix (Player dir pos) _ _ _)) =
---   putStrLn (prettyMatrix matrix)
---   >> putStrLn ("You moved " ++ show dir ++ " and are now at position " ++ show pos)
---   >> printNextGameState ts
-
--- if we have time, do a crappy AI
--- add (cpu) Player to TronState
--- Something like: where updatedPlayer = movePlayer player
--- whenever we move the player, we move the CPU player in the same function, so that we we print out the grid, both the player
--- and CPU move by speed
--- collision logic needs to account for CPU as well
--- BOTH
