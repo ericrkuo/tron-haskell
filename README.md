@@ -24,6 +24,10 @@ Cool right?!? You’ve got to admit-we’ve all wanted to ride a [light cycle](h
 ### Objective
 The objective of the game is simple: a player and CPU will keep moving in a grid as time advances, leaving a trail (“jet trail”) behind them wherever they go. A player wins when their opponent crashes into either the boundaries or any jet trail (their own or the CPUs). To win, players must avoid crashing and maneuver instead to force the opposing player to crash.
 
+### Our Vision
+Our vision for the game is a series of challenging levels growing in the number and difficulty of CPU players. We would also model the UI and graphics of our game similar to that of the movie. In the far-out future, we hope our game can support multiplayer scenarios over the network or on the same machine. Players can compete against each other to climb in rankings based on the number of games won!
+
+
 ### Motivation and why this matters to us
 After our lecture about the Magic Sum game, Duy and I were curious not only about how feasible Haskell is for creating complex games but were inspired to look into the following concepts:
 - How can we enforce the rules of a game (e.g. where a player can move)?
@@ -33,13 +37,11 @@ After our lecture about the Magic Sum game, Duy and I were curious not only abou
 
 We realized these are common questions larger audiences probably have as well when designing games with the above requirements. As a result, with so many questions pondering in our heads, we thought to ourselves, why not combine our love for Tron and Haskell together and answer our questions by getting our hands dirty! Living in the world of Tron and riding a light cycle has always been a dream, but as many others say _"You dream it, we build it!"_
 
-### TODO MENTION HOW ITS COMPELLING TO LARGER AUDIENCE
-
 ## Minimal Viable Project
 With most of the groundwork for our game complete, we can focus more time on our MVP to really leverage the features of Haskell and to take our project to the next level.
 We plan on adding the following features:
 
-### Multiple levels of difficulty of AI
+### CPUs varying in difficulty
 As of right now, we only have a Beginner (Dummy) CPU which moves in the same direction the whole time. We plan on adding more complex algorithms that will allow our CPUs to become more challenging. Since we already added functionality in our proof-of-concept to support CPUs of varying difficulties, this is only a matter of adding new algorithms.
 
 This could involve concepts we learned in class about game trees, next moves, min-maxing, or new algorithms that we discover/create!
@@ -56,10 +58,6 @@ We can also take advantage of Haskell’s module system by separating our code i
 
 ### Packages! - Matrices, listening to user inputs, UI
 Lastly, like every game, we want to add visuals! This will naturally lead us to learn and apply some new package/concepts of the language we have not touched before. In addition to the `Data.Matrix` package mentioned in our proof of concept, we are curious to learn how keyboard events are handled in Haskell and how graphics are rendered. Some packages our group has been looking into are `Gloss` and `System.Console.ANSI`; we cannot wait to play around with that!
-
-Make clear:
-+ TODO how this builds meaningfully toward your product pitch above, without being nearly as much work,
-+ TODO refine how builds on strengths and power of language
 
 ## Proof of Concept
 Our proof-of-concept focuses on the logic and functionality of the game Tron. In more detail, it consists of the following:
