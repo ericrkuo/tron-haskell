@@ -70,7 +70,7 @@ The main idea is that the initial game state starts with a zero matrix, where ze
 - [TODO ADD LINK TronState]()
 
 ### 2. A way to advance the current state of the game
-We implemented logic to allow a player and CPU to specify where they want to move next (either left, forward, or right). By knowing the current state of the game, and where a player wants to move, we can appropriately update the matrix and each player’s new position and, direction.
+We implemented logic to allow a player and CPU to specify where they want to move next (either left, forward, or right). By knowing the current state of the game, and where a player wants to move, we can appropriately update the matrix and each player’s position and direction.
 - [TODO ADD LINK nextGameState]()
 
 ### 3. Collision and bound logic
@@ -80,8 +80,8 @@ We prototyped functionality that will allow the state of the game to detect when
 
 ### 4. IO
 
-We wanted some way for users to interact with our proof of concept, this means specifying in the terminal which direction they wanted to go, and to visually see the state of the game.
-This was accomplished by using recursive IO to pass the state around and to print out the coordinates of where you decided to move, as well as where the CPU decided to move.
+We wanted some way for users to interact with our proof of concept. This was accomplished by allowing users to specify in the terminal which direction they wanted to go, and to visually see the state of the game.
+We prototyped this behaviour using recursive IO to pass the state around and to print out the player and CPU moves.
 > Sneak Preview! Refer to instructions below to see how to run our code.
 <img src="https://media.github.students.cs.ubc.ca/user/1272/files/e54d2280-329b-11ec-9215-78f3e097ac1b" width="300">
 
@@ -111,6 +111,7 @@ To run the code:
     - Remarks:
         - Running `main` will execute our proof of concept for the game Tron
         - You can choose from the specified commands what to do next, each instruction will advance the game state into its next state based on the command provided
+        - Each entry print two things: your move and where the CPU decided to move.
         - Some interesting cases to try
             - What happens if a player collides into their own jet trail?
             - What happens if a player travels out of bounds?
