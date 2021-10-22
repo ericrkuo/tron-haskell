@@ -29,13 +29,13 @@ Our vision for the game is a series of challenging levels growing in the number 
 
 
 ### Motivation and why this matters to us
-After our lecture about the Magic Sum game, Duy and I were curious not only about how feasible Haskell is for creating complex games but were inspired to look into the following concepts:
+After our lecture about the Magic Sum game, Duy and I were curious not only about how feasible Haskell is for creating complex games but were inspired to look deeper into the following concepts:
 - How can we enforce the rules of a game (e.g. where a player can move)?
 - How can we efficiently represent the state of a program for CPUs to make decisions on?
 - How can we handle user-controlled events and progression?
 - How easy is it to navigate/update between different states of a game in Haskell?
 
-We realized these are common questions larger audiences probably have as well when designing games with the above requirements. As a result, with so many questions pondering in our heads, we thought to ourselves, why not combine our love for Tron and Haskell together and answer our questions by getting our hands dirty! Living in the world of Tron and riding a light cycle has always been a dream, but as many others say _"You dream it, we build it!"_
+We realized these are common questions larger audiences probably have as well when designing games with the above requirements. As a result, with so many questions pondering in our heads, we thought to ourselves, why not combine our love for Tron and Haskell together and answer our questions by getting our hands dirty! Living in the world of Tron and riding a light cycle has always been a dream, but in the meantime _"You dream it, we build it!"_
 
 ## Minimal Viable Project
 With most of the groundwork for our game complete, we can focus more time on our MVP to really leverage the features of Haskell and to take our project to the next level.
