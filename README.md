@@ -104,6 +104,7 @@ To run the code:
 - `cd` into the `haskell` directory
 - open VS Code on that directory (`code .`)
 - run the following commands
+    - `stack build`
     - `stack ghci`
     - `:l app/Main.hs`
     - `main`
@@ -126,6 +127,7 @@ To run the tests:
 - `cd` into the `haskell` directory
 - open VS Code on that directory (`code .`)
 - run `stack test`
+### TODO LINK TESTS AND TELL THEM WERE TO FOCUS ON
 
 ## A road down memory lane
 As always, we can't forget our basics! We had a great time following the HtDW recipe from CPSC 110
