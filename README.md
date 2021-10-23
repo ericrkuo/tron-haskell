@@ -35,7 +35,7 @@ After our lecture about the Magic Sum game, Duy and I were curious not only abou
 - How can we handle user-controlled events and progression?
 - How easy is it to navigate/update between different states of a game in Haskell?
 
-We realized these are common design questions people would have when developing a game with the above requirements. As a result, with so many questions pondering in our heads, we thought to ourselves, why not combine our love for Tron and Haskell together and answer our questions by getting our hands dirty! Living in the world of Tron and riding a light cycle has always been a dream, but in the meantime while you dream it, we'll build it! Also, this is perfect if you have 10 minutes to kill or you're bored in lecture. (Make sure your prof doesn't catch you!)
+We realized these are common design questions people would have when developing a game with the above requirements. As a result, we wanted to combine our love for Tron and Haskell to explore these questions. Living in the world of Tron and riding a light cycle has always been a dream, but in the meantime while you dream it, we'll build it! Also, this is perfect if you have 10 minutes to kill or you're bored in lecture. (Make sure your prof doesn't catch you!)
 
 ## Minimal Viable Project
 With most of the groundwork for our game complete, we can focus more time on our MVP to really leverage the features of Haskell and to take our project to the next level.
