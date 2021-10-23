@@ -10,7 +10,7 @@ This project is in fulfillment of the [CPSC 312 2021W1 project requirements](htt
 
 ## Team Members
 
-Our team is:
+Our team:
 
 + Eric Kuo
 + Duy Nguyen
@@ -35,7 +35,7 @@ After our lecture about the Magic Sum game, Duy and I were curious not only abou
 - How can we handle user-controlled events and progression?
 - How easy is it to navigate/update between different states of a game in Haskell?
 
-We realized these are common questions larger audiences probably have as well when designing games with the above requirements. As a result, with so many questions pondering in our heads, we thought to ourselves, why not combine our love for Tron and Haskell together and answer our questions by getting our hands dirty! Living in the world of Tron and riding a light cycle has always been a dream, but in the meantime while you dream it, we'll build it!
+We realized these are common design questions people would have when developing a game with the above requirements. As a result, with so many questions pondering in our heads, we thought to ourselves, why not combine our love for Tron and Haskell together and answer our questions by getting our hands dirty! Living in the world of Tron and riding a light cycle has always been a dream, but in the meantime while you dream it, we'll build it! Also, this is perfect if you have 10 minutes to kill or you're bored in lecture. (Make sure your prof doesn't catch you!)
 
 ## Minimal Viable Project
 With most of the groundwork for our game complete, we can focus more time on our MVP to really leverage the features of Haskell and to take our project to the next level.
@@ -51,21 +51,21 @@ We plan on leveraging concepts we learned in class about Haskell to make our cod
 
 Furthermore, since there are no side effects in Haskell, things like passing around state and handling collisions with jet trails/walls will be much easier to test and help us be more confident that things are working correctly. We also plan on taking advantage of how easy it is to define total functions in Haskell. For example, the [Data.Matrix](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html) package has implementations of [safeGet](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html#v:safeGet) and [safeSet](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html#v:safeSet). This will allow us to define total functions involving matrices, which will also help us create more robust error handling whenever a player collides or goes out of bound.
 
-Finally, we also want to be able to create objects that have a functional nature and by leveraging the strongly typed features of Haskell, we can reduce common type mistakes in our code when dealing with large data types by leveraging compile-time errors and by telling what a function is doing just by its signature.
+Finally, we also want to be able to create objects that have a functional nature and with the strongly typed features of Haskell, we can reduce common type mistakes when dealing with large data types by leveraging compile-time errors and function signatures.
 
 ### Haskell’s module system
 We can also take advantage of Haskell’s module system by separating our code into different modules like a player module, CPU module, game state module, and more. This will lead to a more manageable and less coupled code that can be tested independently and easily modified in the future.
 
 ### Packages! - Matrices, listening to user inputs, UI
-Lastly, like every game, we want to add visuals! This will naturally lead us to learn and apply some new package/concepts of the language we have not touched before. In addition to the `Data.Matrix` package mentioned in our proof of concept, we are curious to learn how keyboard events are handled in Haskell and how graphics are rendered. Some packages our group has been looking into are `Gloss` and `System.Console.ANSI`; we cannot wait to play around with that!
+Lastly, like every game, we want to add visuals! This will naturally lead us to learn and apply some new package/concepts of the language we have not touched before. In addition to the `Data.Matrix` package mentioned in our proof of concept, we are curious to learn how keyboard events are handled in Haskell and how graphics are rendered. Some packages our group has been looking into are `Gloss` and `System.Console.ANSI`. We can't wait to play around to make our game more exciting!
 
 ## Proof of Concept
 Our proof-of-concept focuses on the logic and functionality of the game Tron. In more detail, it consists of the following:
 
 ### 1. A way to represent the current state of the game
-At a high level, this includes where the jet trails currently are, the direction and position of players, the difficulty of the CPU, and whose turn it is. This involved creating [several data types and type synonyms](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L16-L44). We also decided to use the library [Data.Matrix](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html) to represent the state of the game. Using this package gives us an opportunity to work with something new in Haskell and to leverage the utility functions that operate on a matrix out of the box.
+At a high level, our game state includes a matrix that stores where the jet trails currently are, the direction and position of players, the difficulty of the CPU, and whose turn it is. This involved creating [several data types and type synonyms](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L16-L44). We also decided to use the library [Data.Matrix](https://hackage.haskell.org/package/matrix-0.3.6.1/docs/Data-Matrix.html) to represent the state of the game. Using this package gives us an opportunity to work with something new in Haskell and to leverage the utility functions that operate on a matrix out of the box.
 
-The main idea is that the initial game state starts with a zero matrix, where zero indicates the cell is unoccupied, free for any CPU/player to travel. As time progresses and the players move, a 1 signifies the jet trail of the current player, and a -1 signifies the jet trail of the CPU. In our MVP, the idea is to use the numbers in this matrix as a way to color our cells graphically.
+The main idea is that the initial game state starts with a zero matrix, where zero indicates a cell is unoccupied, free for any CPU/player to travel. As time progresses and the players move, a 1 signifies the jet trail of the current player, and a -1 signifies the jet trail of the CPU. In our MVP, the idea is to use the numbers in this matrix as a way to color our cells graphically.
 
 - Data type for our game state: [TronState](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L46-L54)
 - [initTronState](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/src/Lib.hs#L65-L73) initializes our `TronState`
@@ -96,7 +96,7 @@ We were also curious about how to model direction, players, and moves, which are
 ### How this gives us the confidence to complete our MVP
 By having our core logic implemented and thoroughly tested code, we can focus more of our time and resources on exploring different libraries for UI like Gloss, how to read keyboard inputs, and refining our code to take on more Haskell features. 
 
-Furthermore, after spending type prototyping with several external packages to represent the state of the game, we are more confident now with manage and use packages in our code.
+Furthermore, after spending type prototyping with several external packages to represent the state of the game, we are more confident now with managing and using packages in our code.
 
 ### How to test and run the code: Haskell
 
