@@ -96,7 +96,7 @@ We were also curious about how to model direction, players, and moves, which are
 ### How this gives us the confidence to complete our MVP
 By having our core logic implemented and thoroughly tested code, we can focus more of our time and resources on exploring different libraries for UI like Gloss, how to read keyboard inputs, and refining our code to take on more Haskell features. 
 
-Furthermore, after spending type prototyping with several external packages to represent the state of the game, we are more confident now with managing and using packages in our code.
+Furthermore, after spending time prototyping with several external packages to represent the state of the game, we are more confident now with managing and using packages in our code.
 
 ### How to test and run the code: Haskell
 
