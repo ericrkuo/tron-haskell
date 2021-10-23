@@ -127,7 +127,11 @@ To run the tests:
 - `cd` into the `haskell` directory
 - open VS Code on that directory (`code .`)
 - run `stack test`
-### TODO LINK TESTS AND TELL THEM WERE TO FOCUS ON
+- Some of our main test groups testing core logic of our proof of concept
+    - [jet trail collision tests](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/test/Spec.hs#L97)
+    - [out of bounds tests](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/test/Spec.hs#L225)
+    - [moving forward tests](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/test/Spec.hs#L260)
+    - [moving right tests](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/c4e8985cf9737eb3734ab4ec770a3a93b2e3f4de/haskell/test/Spec.hs#L351)
 
 ## A road down memory lane
 As always, we can't forget our basics! We had a great time following the HtDW recipe from CPSC 110
