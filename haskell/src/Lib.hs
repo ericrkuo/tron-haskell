@@ -1,5 +1,4 @@
 {-# LANGUAGE InstanceSigs #-}
--- TODO properly document all code
 module Lib where
 
 import Data.Matrix
@@ -107,7 +106,6 @@ willCollideWithJetTrail (TronState m p cpu turn _) move = fromMaybe 1 (safeGet r
         dir' = changeDirection (getPlayerDirection currP) move
         (row', col') = calculateNextPosition dir' (getPlayerPosition currP)
 
--- TODO tests
 updatePlayerDirection :: Player -> Move -> Player
 updatePlayerDirection (Player d pos) move = Player (changeDirection d move) pos
 
@@ -117,10 +115,7 @@ getPlayerDirection (Player d _) = d
 getPlayerPosition :: Player -> Position
 getPlayerPosition (Player _ p) = p
 
--- TODO moveLeft, moveRight, moveFoward (just ASSUME bikeSpeed is 1, if too slow we can increase the tick rate of the game)
--- moveLeft will change direction and then call moveForward with the updated direction
--- TODO tests
--- DUY
+-- $moveLeft tronState@ will change direction and then call moveForward with the updated direction
 moveLeft :: TronState -> TronState
 moveLeft (TronState m p cpu P d) = moveForward (TronState m (updatePlayerDirection p MoveLeft) cpu P d)
 moveLeft (TronState m p cpu CPU d) = moveForward (TronState m p (updatePlayerDirection cpu MoveLeft ) CPU d)
