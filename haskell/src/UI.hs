@@ -29,8 +29,8 @@ cpuColor = red
 startingGameState = (createTronState gridSize gridSize, MoveForward, Menu)
 retryGameState = (createTronState gridSize gridSize, MoveForward, InProgress)
 
-main :: IO ()
-main = do
+start :: IO ()
+start = do
     play
         window
         backgroundColor
