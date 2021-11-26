@@ -7,8 +7,6 @@ import Data.Maybe
 -- Constants
 width = 20
 height = 20
-playerColor = "blue"
-cpuColor = "orange"
 pMark = 1
 cpuMark = -1
 
@@ -61,15 +59,18 @@ instance Show TronState where
     ++ show cpu ++ "\n"
     ++ "Turn: " ++ show turn ++ " Difficulty: " ++ show difficulty
 
--- | @initTronState@ initializes a matrix of size @height@ and @width@
+initTronState :: TronState
+initTronState = createTronState height width
+
+-- | @createTronState h w@ initializes a matrix of size @h@ and @w@
 -- Initializes the tron state with one player and a cpu, the player goes first
 -- For now, there is only the Beginner CPU
-initTronState :: TronState
-initTronState = TronState matrix (Player East playerPos) (Player West cpuPlayerPos) P Beginner
+createTronState :: Int -> Int -> TronState
+createTronState h w = TronState matrix (Player East playerPos) (Player West cpuPlayerPos) P Beginner
     where
-        playerPos = (div height 2, 3) -- remember Position is (row, col) AKA (y, x)
-        cpuPlayerPos = (div height 2, width - 2)
-        matrix = setElem cpuMark cpuPlayerPos (setElem pMark playerPos (zero height width))
+        playerPos = (div h 2, 3) -- remember Position is (row, col) AKA (y, x)
+        cpuPlayerPos = (div w 2, w - 2)
+        matrix = setElem cpuMark cpuPlayerPos (setElem pMark playerPos (zero h w))
 
 -- | @changeDirection direction move@ evaluates to the next direction state depending on what @move@ is
 -- For example, if we are travelling @North@ and we @MoveLeft@, then the next direction would be @East@
@@ -159,6 +160,9 @@ advanceCPUState ts = nextGameState ts (getCPUMove ts)
 
 getTurn :: TronState -> Turn
 getTurn (TronState _ _ _ t _) = t
+
+changeDifficulty :: TronState -> Difficulty -> TronState
+changeDifficulty (TronState m p cpu t _) = TronState m p cpu t
 
 getDifficulty :: TronState -> Difficulty
 getDifficulty (TronState _ _ _ _ d) = d
