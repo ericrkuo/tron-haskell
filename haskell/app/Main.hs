@@ -1,9 +1,7 @@
 module Main where
 
 import Lib
+import UI
 
 main :: IO ()
-main = printNextGameState initTronState
-
--- TODO try something with gloss
--- TODO try something listening to keyboard events
+main = UI.start
