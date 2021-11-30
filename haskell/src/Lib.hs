@@ -23,6 +23,7 @@ data Move
   = MoveLeft
   | MoveRight
   | MoveForward
+  deriving (Show, Eq)
 
 -- | @Position@ is a type synonym for the tuple (Int,Int)
 -- The first element is the row (y coordinate), second element is the column (x coordinate)
@@ -155,9 +156,6 @@ nextGameState ts move = if isValidGameState then Just nextTs else Nothing
         -- IMPORTANT: collision check needs to look at old tron state
         isValidGameState = not (isOutOfBounds nextTs) && not (willCollideWithJetTrail ts move)
 
-advanceCPUState :: TronState -> Maybe TronState
-advanceCPUState ts = nextGameState ts (getCPUMove ts)
-
 getTurn :: TronState -> Turn
 getTurn (TronState _ _ _ t _) = t
 
@@ -167,18 +165,30 @@ changeDifficulty (TronState m p cpu t _) = TronState m p cpu t
 getDifficulty :: TronState -> Difficulty
 getDifficulty (TronState _ _ _ _ d) = d
 
-getCPUMove :: TronState -> Move
-getCPUMove ts = case getDifficulty ts of
-                  Beginner -> pickBeginnerMoveCPU ts
+-- | @advanceCPUState tronState@ calculates the next position of the CPU
+-- CPU's can have varying difficulties, which allow them to make informed decisions on which move to pick next
+advanceCPUState :: TronState -> Maybe TronState
+advanceCPUState ts = nextGameState ts cpuMove
+  where difficulty = getDifficulty ts
+        cpuMove = case difficulty of
+                    Beginner -> beginnerCPUAlgorithm ts
 
-pickBeginnerMoveCPU :: TronState -> Move
-pickBeginnerMoveCPU (TronState m _ cpu _ _) = pickRandomMove
-  where pickRandomMove = MoveForward
+-- | @beginnerCPUAlgorithm ts@ is a very simple CPU, it plays to SURVIVE
+-- It predicts one step into the future, either moving forward, right or left.
+-- If any of those moves does not result in a loss, we choose one (priority goes towards forward, left, then right)
+beginnerCPUAlgorithm :: TronState -> Move
+beginnerCPUAlgorithm ts@(TronState m _ cpu _ _) = move
+  where
+    nextTsForward = if isNothing (nextGameState ts MoveForward) then Nothing else Just MoveForward
+    nextTsRight = if isNothing (nextGameState ts MoveRight) then Nothing else Just MoveRight
+    nextTsLeft = if isNothing (nextGameState ts MoveLeft) then Nothing else Just MoveLeft
+    nextStates = [nextTsForward, nextTsLeft, nextTsRight]
+    validMoves = catMaybes nextStates
+    move = if null validMoves then MoveRight else head validMoves
 
 -- | @printNextGameState tronState@
 -- Our proof of concept demo will use this function which repeatedly asks you each time whether to move right, left, or forward
 -- Will print the next valid game state, otherwise if you've crashed then the game is over
--- TODO put this with main and see if it works when executable produced
 printNextGameState :: TronState -> IO()
 printNextGameState ts =
   putStrLn "What's your next move? Choose from [Right, Left, Forward]"
@@ -186,8 +196,6 @@ printNextGameState ts =
   >>= readMove
   >>= handleNextTronState ts
 
--- TODO see if some way to listen to keyboard events instead
--- if using AWSD or arrow keys, need to be aware of current direction going combined with which key pressed
 readMove :: String -> IO Move
 readMove "Right" = return MoveRight
 readMove "Left" = return MoveLeft
