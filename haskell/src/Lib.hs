@@ -145,8 +145,6 @@ moveForward (TronState matrix p (Player dir pos) CPU d) = TronState newMatrix p 
 -- | @nextTronStateForPlayer tronState move@ produces the next state of the game based on the current player's move
 -- ASSUME @tronstate@ is valid (that is there are no collisions)
 -- After we get the "potential" next game state, we need to check for any collisions
--- TODO consider putting game status into the TronState rather than producing Maybe TronState
--- TODO might need isTronWin, isTronLoss, isTronTied functions that nextTronStateForPlayer can call
 nextGameState :: TronState -> Move -> Maybe TronState
 nextGameState ts move = if isValidGameState then Just nextTs else Nothing
   where nextTs = case move of

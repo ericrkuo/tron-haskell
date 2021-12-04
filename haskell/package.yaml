@@ -6,6 +6,7 @@ dependencies:
 - matrix
 - gloss
 - random
+- directory
 
 library:
   source-dirs: src
@@ -24,6 +25,7 @@ executables:
     - matrix
     - gloss
     - random
+    - directory
 
 tests:
   tron-test:
