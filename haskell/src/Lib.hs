@@ -3,6 +3,7 @@ module Lib where
 
 import Data.Matrix
 import Data.Maybe
+import System.Random
 
 -- Constants
 width = 20
@@ -37,8 +38,9 @@ data Turn = P | CPU
 data Player = Player Direction Position
   deriving (Eq, Show)
 
--- For now, just Beginner difficulty
-data Difficulty = Beginner
+-- | @Difficulty@ represents the difficulty of the CPU. Higher levels of difficulty
+-- causes the CPU to make more informed decisions on where to move
+data Difficulty = Beginner | Medium
   deriving (Eq, Show)
 
 -- | @TronState@ is the heart of the game Tron
@@ -65,7 +67,6 @@ initTronState = createTronState height width
 
 -- | @createTronState h w@ initializes a matrix of size @h@ and @w@
 -- Initializes the tron state with one player and a cpu, the player goes first
--- For now, there is only the Beginner CPU
 createTronState :: Int -> Int -> TronState
 createTronState h w = TronState matrix (Player East playerPos) (Player West cpuPlayerPos) P Beginner
     where
@@ -163,13 +164,16 @@ changeDifficulty (TronState m p cpu t _) = TronState m p cpu t
 getDifficulty :: TronState -> Difficulty
 getDifficulty (TronState _ _ _ _ d) = d
 
--- | @advanceCPUState tronState@ calculates the next position of the CPU
+-- | @advanceCPUStateIO tronState@ calculates the next position of the CPU
 -- CPU's can have varying difficulties, which allow them to make informed decisions on which move to pick next
-advanceCPUState :: TronState -> Maybe TronState
-advanceCPUState ts = nextGameState ts cpuMove
-  where difficulty = getDifficulty ts
-        cpuMove = case difficulty of
-                    Beginner -> beginnerCPUAlgorithm ts
+advanceCPUStateIO :: TronState -> IO (Maybe TronState)
+advanceCPUStateIO ts = do
+    let difficulty = getDifficulty ts
+    cpuMove <- case difficulty of
+      Beginner -> return (beginnerCPUAlgorithm ts)
+      Medium -> do
+        mediumCPUAlgorithm ts <$> (randomRIO (0, 100) :: IO Int)
+    return (nextGameState ts cpuMove)
 
 -- | @beginnerCPUAlgorithm ts@ is a very simple CPU, it plays to SURVIVE
 -- It predicts one step into the future, either moving forward, right or left.
@@ -183,6 +187,34 @@ beginnerCPUAlgorithm ts@(TronState m _ cpu _ _) = move
     nextStates = [nextTsForward, nextTsLeft, nextTsRight]
     validMoves = catMaybes nextStates
     move = if null validMoves then MoveRight else head validMoves
+
+-- | @mediumCPUAlgorithm ts r@ chooses where to move given a random number between 0 and 100 inclusive.
+-- However, it is similar to @beginnerCPUAlgorithm@ in the sense that it will override the chosen move with
+-- a new move, if it results in a loss. Therefore, this introduces some unpredictability in where the
+-- CPU can move
+mediumCPUAlgorithm :: TronState -> Int -> Move
+mediumCPUAlgorithm ts r
+  | r <= lo = if canMoveRight then MoveRight else if canMoveForward then MoveForward else MoveLeft
+  | r >= hi = if canMoveLeft then MoveLeft else if canMoveForward then MoveForward else MoveRight
+  -- r is between (lo, hi) non-inclusive
+  | otherwise = if canMoveForward then MoveForward else
+                  if r <= mid && canMoveLeft then MoveLeft else MoveRight
+  where
+    canMoveRight = isJust (nextGameState ts MoveRight)
+    canMoveLeft = isJust (nextGameState ts MoveLeft)
+    canMoveForward = isJust (nextGameState ts MoveForward)
+    lo = 10
+    hi = 90
+    mid = (hi-lo) `div` 2
+
+-- | @advanceCPUState tronState@ calculates the next position of the CPU
+-- DEPRECATED - used only for proposal, see advanceCPUStateIO for connction with Gloss
+advanceCPUState :: TronState -> Maybe TronState
+advanceCPUState ts = nextGameState ts cpuMove
+  where difficulty = getDifficulty ts
+        cpuMove = case difficulty of
+                    Beginner -> beginnerCPUAlgorithm ts
+                    Medium -> mediumCPUAlgorithm ts 50 -- always MoveForward
 
 -- | @printNextGameState tronState@
 -- Our proof of concept demo will use this function which repeatedly asks you each time whether to move right, left, or forward

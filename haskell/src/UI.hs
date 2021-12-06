@@ -168,7 +168,7 @@ handleKey key gs@(ts, _, InProgress, score) =
 -- user in Menu, allow them to choose CPU difficulty, view scores, or exit
 handleKey key gs@(ts, move, Menu, _) = case key of
     Char '1' -> return (changeDifficulty ts Beginner, move, InProgress, 0)
-    Char '2' -> return (changeDifficulty ts Beginner, move, InProgress, 0) -- TODO change once we add CPU difficulty
+    Char '2' -> return (changeDifficulty ts Medium, move, InProgress, 0)
     Char '3' -> return (changeDifficulty ts Beginner, move, InProgress, 0) -- TODO change once we add CPU difficulty
     Char 'v' -> return (ts, move, ViewScores, 0)
     SpecialKey KeyEsc -> do
@@ -224,13 +224,15 @@ handleEvent event gs = case event of
 
 -- | @handleStep time gamestate@ advances the state of the game depending on whose turn it is
 handleStep :: Float -> GameState -> IO GameState
-handleStep _ (ts, move, InProgress, score) = return (case turn of
-        CPU -> case advanceCPUState ts of
-                    Nothing -> (ts, move, Win, score+500)
-                    Just ts' -> (ts', MoveForward, InProgress, newScore) -- reset to move forward
+handleStep _ (ts, move, InProgress, score) = case turn of
+        CPU -> do
+            nextCPUState <- advanceCPUStateIO ts
+            return (case nextCPUState of
+                Nothing -> (ts, move, Win, score+500)
+                Just ts' -> (ts', MoveForward, InProgress, newScore)) -- reset to move forward
         P -> case nextGameState ts move of
-                Nothing -> (ts, move, Loss, score)
-                Just ts' -> (ts', MoveForward , InProgress, newScore)) -- reset to move forward
+                Nothing -> return (ts, move, Loss, score)
+                Just ts' -> return (ts', MoveForward , InProgress, newScore) -- reset to move forward
     where
         turn = getTurn ts
         newScore = score + 100
