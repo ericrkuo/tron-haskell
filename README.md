@@ -24,7 +24,6 @@ Our full proposal can be found at [Proposal.md](/Proposal.md)
 ## MVP documentation
 In our proposal, we worked on representing the state of the game and building the core logic of handling collisions and updating states. For our MVP, we wanted to challenge ourselves on several complex features that would give us great exposure to developing games in Haskell. The following section describes the features we worked on!
 
-
 ### GUI
 We used [Gloss](https://hackage.haskell.org/package/gloss) to create a basic GUI for our game. The [playIO](https://hackage.haskell.org/package/gloss-1.13.2.1/docs/Graphics-Gloss-Interface-IO-Game.html#v:playIO) function from `Gloss` was relatively easy to use; by defining functions to handle events, draw each frame, and advance each step of our game, we were quickly able to get a prototype up and running. 
 TODO link to play IO
@@ -72,7 +71,6 @@ We wanted to ensure that the core logic of our game had no side effects and that
 Like other programming languages, Haskell has support for a module system that enabled us to break our one long file into 2 separate modules: Lib and UI. This greatly improved the workflow and management of our code as it separated the logic of our game from the UI. As our code was less coupled, we could make patches that can be tested independently. We also learned about using numerous modules from external packages and had fun learning about concepts such as qualified imports, import scopes, and hiding identifiers.
 
 
-
 ## What we learned
 - Matrices
     - We used matrices extensively in our project to model the current state of the game. We used the `Data.Matrix` package which helped us with the following features
@@ -90,6 +88,47 @@ Like other programming languages, Haskell has support for a module system that e
     - We gained a lot more exposure to working with IO in our MVP. From lectures, we learned about IO Monads and gained a better understanding of why they’re descriptions or recipes of effectual computations.
     - With Gloss, we learned about `do` notation and employed it in multiple areas of our code (TODO link).
     - We also got exposure with file IO by reading and writing to a file, which helped create our robust scoring system. (TODO: maybe link)
+
+## Some thoughts 
+### Importance of our Project
+One of our main goals with Tron was to discover how feasible it is to create games in Haskell. More specifically, we aimed to answer questions surrounding how to:
+- Enforce the rules of a game
+- Efficiently represent the state of a program for CPUs to make decisions on
+- Handle user-controlled events and progression 
+- Navigate and update different states of a game
+
+Our main takeaway is that the functional nature of Haskell makes it simple to concisely represent rule-based games. Although we faced some trouble at the start designing the game without OOP, enforcing the rules of the game was simple to code once we figured out how we wanted to represent the state of the game. We learnt that functional programming has many strengths when it comes to games. For example, passing around the state of our game without side effects helped us be more confident that our tests were working correctly and that the state of our game was being updated correctly. Using Gloss was simple as well, it didn’t require as much code or head-banging as we expected, instead, it was intuitive to use and only required slight modifications in our proposal to connect with Gloss. Lastly, Haskell’s pattern matching and type safety made it quite easy to write code and debug errors.
+
+## Bonus Features
+- Menu
+    - Originally in our MVP, we planned on having a simple GUI that when executed, would immediately start the game. However, we were curious and wanted to find out how easy it would be to define different pages in our game such as a menu, game-over page, etc.
+    - We accomplished this by adding a [Mode TODO link]() data type that we used to decide what to render to the screen and what keys were allowed to be pressed in that mode. For example, if the mode of the game is in progress, then we would draw the grid and only respond to arrow key events. On the other hand, if the mode of the game is the menu, then we would draw the menu and listen to other keys.
+        - TODO link to handleKey for Menu and handleKey for Game
+        - TODO link to drawMenu and drawGrid
+    - Talk about WHY its beyond core proposed MVP
+- Scoring system
+    - To challenge ourselves, we wanted to come up with a scoring system for our game. In addition, since we’re learning about file systems in CPSC 313, we decided to save our scores to a file permanently so that when the game is launched, scores from previous games are loaded back in.
+    - For the actual scoring mechanism, the score is determined by how long the user survives. More specifically, on each frame generated, the score is increased by a certain amount.
+        - TODO insert a link to code
+    - Anytime the game finishes, we save the score to the file
+        - TODO link code to where we handle retry
+        - TODO link code to where we save the score
+    - When the user is in the menu and selects to view the scores, we read from the score file and choose the top 10 highest scores. We made sure our function had no side effects so that if the score file did not exist or was malformed (contains data that aren’t scores like random text or blank lines), the function would not crash. This was accomplished using readMaybe and helped our game be more robust
+        - TODO link to code getScores
+
+### A fully fledge Project...
+With a lot of the core functionality and UI of our project completed, we’ve made substantial progress towards a fully polished product. There are numerous tasks we would love to learn more about and believe would not require much work since our MVP and proposal have laid out most of the groundwork.
+
+- Learning more ways to efficiently represent the state of a game - we would like to refactor the state of our game so that our code is more maintainable and extendable in the future. Throughout the project, when we tried adding new arguments to our data type [TronState TODO link](), we were forced to refactor a lot of areas in our code to account for these new fields. We had a lot of places that pattern matched like `TronState(_,_,_,_,_)` or had helper functions to get a single argument out of the state. One of our main ideas is to use record syntax to make our code more readable. 
+- Another idea we had is to create a new data type, `Metadata`, that could be used in our `TronState` to hold information like lives, scores, positions, etc. It would make it easy to add new arguments without requiring drastic changes for every function that depends on our data type.
+- We ran into issues implementing a complex AI algorithm as `TronState` stored both the game's metadata as well as the game board. As such, it became expensive and cumbersome when generating search trees so in the future, we could potentially split `TronState` to accomodate for these resource-intensive algorithms. 
+- Better UI framework - for a fully polished product, we would like to replace Gloss with a library that has more styling options (Gloss only allows a single font and a limited number of shapes) and to also address the problem we faced with keys sometimes not being registered. This would not require much work since we could reuse existing work from Gloss and adapt it to the new package we choose.
+- Minor modifications - since we have the basic architecture and functionality of our code done, we can enhance our game by adding smarter and more CPUs, lives, and even introduce PvP gameplay. These would not only make our game more enjoyable but would also serve as excellent learning opportunities.
+
+### How and why final project varies in limited and reasonable ways from proposal
+In our proposal, we worked on modelling the state and interactions of the game. This involved defining how the state updates when we move forward/left/right and defining the logic for handling jet trail collisions and out-of-bounds. In our final project, we built on top of the work from our proposal to accomplish several challenging features. Learning how to make a GUI gave us exposure to a whole new area in Haskell dealing with IO, graphics, event handling and world transitions. Moreover, working on CPU algorithms allowed us to **use** the state we came up with in our proposal to help our CPUs make more informed decisions. Lastly, there were some bonus features we worked on listed in [TODO link to significantly step beyond core proposed MVP] that helped us learn new concepts such as working with file systems in Haskell.
+
+
 
 
 
