@@ -203,8 +203,8 @@ mediumCPUAlgorithm ts r
     canMoveRight = isJust (nextGameState ts MoveRight)
     canMoveLeft = isJust (nextGameState ts MoveLeft)
     canMoveForward = isJust (nextGameState ts MoveForward)
-    lo = 10
-    hi = 90
+    lo = 5
+    hi = 95
     mid = (hi-lo) `div` 2
 
 -- | @advanceCPUState tronState@ calculates the next position of the CPU
