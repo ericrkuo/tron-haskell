@@ -145,10 +145,10 @@ To run the code:
 - run the following commands
     - `stack build`
     - `stack ghci`
-    - `:l app/Main.hs`
-    - `main`
+    - `:l src/UI.hs`
+    - `start`
 - Remarks and rules:
-    - Running `main` will cause a new window to pop up and will bring you to the main menu.
+    - Running `start` will cause a new window to pop up and will bring you to the main menu.
     - Select the difficulty of the CPU you want to play against.
     - After the game is over, you will be prompted to try again, return to the menu, or exit the game!
 - Controls
