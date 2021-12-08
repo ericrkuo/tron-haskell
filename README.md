@@ -22,7 +22,7 @@ https://1drv.ms/v/s!Ate0x2ZGgORSjW4ssxbx8ppvU61_?e=yaRhvI
 Our full proposal can be found at [Proposal.md](/Proposal.md)
 
 ## MVP Documentation
-In our proposal, we worked on representing the state of the game and building the core logic of handling collisions and updating states. For our final project, we wanted to challenge ourselves to build several complex features that would give us lots of exposure developing games in Haskell, apply our learnings from lecture, and present us with an opportunity to learn new things! The following section describes the features we promised in our proposal.
+In our proposal, we worked on representing the state of the game and building the core logic of handling collisions and updating states. For our final project, we wanted to challenge ourselves to build several complex features that would give us lots of exposure to developing games in Haskell, apply our learnings from lectures, and present us with an opportunity to learn new things! The following section describes the features we promised in our proposal.
 
 ### 1. A Graphical User Interface (GUI)
 We used [Gloss](https://hackage.haskell.org/package/gloss) to create a basic GUI for our game. Gloss's [`playIO`](https://hackage.haskell.org/package/gloss-1.13.2.1/docs/Graphics-Gloss-Interface-IO-Game.html#v:playIO) function was relatively easy to use; by simply defining functions to handle events, render images, and advance each step of our game, we were able to get a prototype up and running relatively quick.
@@ -51,8 +51,8 @@ One big challenge we faced with `Gloss` were keys not being registered.
 - When drawing frames, `Gloss` does not allow users to reuse the previous frame. Instead, the whole game state has to be drawn from scratch on every step of our game. Consequently, the arrow keys are sometimes unresponsive. Our theory is that our function [`drawGrid`](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/438b5c3207d9da02bfdea1dffef0f5ffa2ef7747/haskell/src/UI.hs#L129-L139) is expensive since our matrix is large; this causes some timing issues when `Gloss` tries to render each frame and listen to keyboard inputs.
 - However, we prototyped several iterations of drawing our grid, each time minimizing how much was drawn.
     - Our first version of `drawGrid` drew empty cells as black rectangles. Unfortunately, this caused a lot of lag since our matrix of size `n x n` needed to draw `n x n` pictures.
-    - Our [second attempt](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blame/24cca26ce79963f45b0f9355d5e91649cf60536b/haskell/src/UI.hs#L65-L72) only drew cells where the CPU and player had their jet trails occupying. This resulted in a much smoother game compared to our first version since we ignored empty cells, but we felt there was more that could be improved.
-    - Our [third version](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/438b5c3207d9da02bfdea1dffef0f5ffa2ef7747/haskell/src/UI.hs#L129-L139) which reduced the size of the list we operated on and the number of times we accessed our matrix.
+    - Our [second attempt](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blame/24cca26ce79963f45b0f9355d5e91649cf60536b/haskell/src/UI.hs#L65-L72) only drew cells where the CPU and player had their jet trails occupied. This resulted in a much smoother game compared to our first version since we ignored empty cells, but we felt there was more that could be improved.
+    - Our [third version](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/438b5c3207d9da02bfdea1dffef0f5ffa2ef7747/haskell/src/UI.hs#L129-L139) reduced the size of the list we operated on and the number of times we accessed our matrix.
 - > Note: the matrix represents the state of the game where 0 is an empty cell, 1 represents the players jet trail, and -1 represents the CPUs jet trail
 
 ### 2. CPUs Varying in Difficulty
@@ -63,7 +63,7 @@ In our final project, we incorporated 2 different difficulty levels:
     - Our first CPU plays to survive. It looks exactly one step ahead in the future (either moving forward, left, right) and picks the move that doesn’t result in a loss. If multiple moves are valid, we take priority moving forward, then left, and lastly right. 
     - [`beginnerCPUAlgorithm`](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/438b5c3207d9da02bfdea1dffef0f5ffa2ef7747/haskell/src/Lib.hs#L178-L189)
 - Medium
-    - Our second CPU is similar to our beginner CPU, however it uses the [random](https://hackage.haskell.org/package/random-1.2.1/docs/System-Random.html) package to add some unpredictability when choosing a move.
+    - Our second CPU is similar to our beginner CPU, however, it uses the [random](https://hackage.haskell.org/package/random-1.2.1/docs/System-Random.html) package to add some unpredictability when choosing a move.
     - [`mediumCPUAlgorithm`](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/438b5c3207d9da02bfdea1dffef0f5ffa2ef7747/haskell/src/Lib.hs#L191-L208)
 - Hard
     - Originally we were implementing a minimax algorithm for our Hard CPU, however, as our search tree grew too large, we discovered that a pruning algorithm was required to reduce the search runtime. This required us to refactor a significant portion of our code and so we decided to leave this feature out.
@@ -106,12 +106,12 @@ With a lot of the core functionality and UI of our project completed, we’ve ma
 
 - Learning more ways to efficiently represent the state of a game - we would like to refactor the state of our game so that our code is more maintainable and extendable in the future. Throughout the project, when we tried adding new arguments to our data type, [`TronState`](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/438b5c3207d9da02bfdea1dffef0f5ffa2ef7747/haskell/src/Lib.hs#L46-L54), we were forced to refactor a lot of areas in our code to account for these new fields. We had a lot of places that pattern matched like `TronState(_,_,_,_,_)` or had helper functions to get a single argument out of the state. One of our main ideas is to use [record syntax](https://devtut.github.io/haskell/record-syntax.html) to make our code more readable. 
   - Another idea we had is to create a new data type, `Metadata`, that could be used in our `TronState` to hold information like lives, scores, positions, etc. It would make it easy to add new arguments without requiring drastic changes for every function that depends on our data type.
-- Furthermore, we ran into issues implementing a complex AI algorithm as `TronState` stored both the game's metadata as well as the game board. As such, it became expensive and cumbersome when generating search trees so in the future, we could potentially split `TronState` to accommodate for these resource-intensive algorithms. 
+- Furthermore, we ran into issues implementing a complex AI algorithm as `TronState` stored both the game's metadata as well as the game board. As such, it became expensive and cumbersome when generating search trees. In the future, we could potentially split `TronState` to accommodate for these resource-intensive algorithms. 
 - Better UI framework - for a fully polished product, we would like to replace `Gloss` with a library that has more styling options (`Gloss` only allows a single font and a limited number of shapes) and to also address the problem we faced with keys sometimes not being registered. This would not require much work since we could reuse existing work from `Gloss` and adapt it to the new package we choose.
-- Minor modifications - since we have the basic architecture and functionality of our code done, we can enhance our game by adding smarter and **multiple** CPUs, lives, and even introduce PvP game play. These would not only make our game more enjoyable but would also serve as excellent learning opportunities.
+- Minor modifications - since we have the basic architecture and functionality of our code done, we can enhance our game by adding smarter and **multiple** CPUs, lives, and even introducing PvP gameplay. These would not only make our game more enjoyable but would also serve as excellent learning opportunities.
 
 ### How and Why Our Final Project Varies In Limited and Reasonable Ways from the Proposal
-In our proposal, we worked on modelling the state and interactions of the game. This involved defining how the state updates when we move forward/left/right and defining the logic for handling jet trail collisions and out-of-bounds. In our final project, we built on top of the work from our proposal to accomplish several challenging features. Learning how to make a GUI gave us exposure to a whole new area in Haskell dealing with IO, graphics, event handling and world transitions. Moreover, working on CPU algorithms allowed us to **use** the state we came up with in our proposal to help our CPUs make more informed decisions. Lastly, our bonus features, the multi-page GUI and scoring system, helped us learn a lot of new concepts such as working with file systems in Haskell.
+In our proposal, we worked on modelling the state and interactions of the game. This involved defining how the state updates when we move forward/left/right and defining the logic for handling jet trail collisions and out-of-bounds. In our final project, we built on top of the work from our proposal to accomplish several challenging features. Learning how to make a GUI gave us exposure to a whole new area in Haskell dealing with IO, graphics, event handling and world transitions. Moreover, working on CPU algorithms allowed us to **use** the state we came up within our proposal to help our CPUs make more informed decisions. Lastly, our bonus features, the multi-page GUI and scoring system, helped us learn a lot of new concepts such as working with file systems in Haskell.
 
 ## Application of New Learning
 - Matrices
@@ -131,7 +131,7 @@ In our proposal, we worked on modelling the state and interactions of the game. 
         - [`TronState`](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/438b5c3207d9da02bfdea1dffef0f5ffa2ef7747/haskell/src/Lib.hs#L46-L54)
         - [`GameState`](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/438b5c3207d9da02bfdea1dffef0f5ffa2ef7747/haskell/src/UI.hs#L34-L38)
 - IO
-    - We gained a lot more exposure to working with IO in our MVP. From lectures, we learned about IO Monads and this gave us an opportunity to improve our understanding of why they’re descriptions or recipes of effectual computations. Our project benefited from this because of how we no longer have side effects and could create more complex features.
+    - We gained a lot more exposure to working with IO in our MVP. From lectures, we learned about IO Monads and this allowed us to improve our understanding of why they’re descriptions or recipes of effectual computations. Our project benefited from this because of how we no longer have side effects and could create more complex features.
     - We learned about the [`do`](https://en.wikibooks.org/wiki/Haskell/do_notation) notation, working with File IO, and employed it in multiple areas of our code such as
       - [`getScores`](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/438b5c3207d9da02bfdea1dffef0f5ffa2ef7747/haskell/src/UI.hs#L66-L76)
       - [`start`](https://github.students.cs.ubc.ca/er11k26/cpsc-312-project/blob/438b5c3207d9da02bfdea1dffef0f5ffa2ef7747/haskell/src/UI.hs#L53-L64)
@@ -150,7 +150,7 @@ To run the code:
 - Remarks and rules:
     - Running `main` will cause a new window to pop up and will bring you to the main menu.
     - Select the difficulty of the CPU you want to play against.
-    - After the game is over, you will be prompted to try again, return to the menu, or to exit the game!
+    - After the game is over, you will be prompted to try again, return to the menu, or exit the game!
 - Controls
     - Once the game starts, you (the blue player) will use the arrow keys to control the direction of your lightbike.
 
@@ -158,11 +158,11 @@ To run the code:
     > the `Gloss` package and how frames are rendered. To avoid this issue, you may need to press a key multiple
     > times to turn in the desired direction.
 
-    - As the game progresses, your jet trail will grow and the objective is to avoid colliding into the walls or the jet trails (your own and the CPU's)!
+    - As the game progresses, your jet trail will grow and the objective is to avoid colliding into the walls or the jet trails (your own and the CPUs)!
     - Some interesting cases to try
-        - What happens if a player collides into their own jet trail?
+        - What happens if a player collides into their jet trail?
         - What happens if a player travels out of bounds?
-        - Can you predict where the CPU will go next? Try to outsmart them and move onto the next level of difficulty!
+        - Can you predict where the CPU will go next? Try to outsmart them and move on to the next level of difficulty!
         - Is it better to play aggressive or passive against the CPU?
 
 To run the tests:
